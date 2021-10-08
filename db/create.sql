@@ -34,7 +34,7 @@ percent_off FLOAT NOT NULL
 );
 
 CREATE TABLE Purchases
-(order_id INTE NOT NULL,
+(order_id INT NOT NULL,
 product_name VARCHAR(256) 
 FOREIGN KEY(product_name) REFERENCES Product(name),
 seller_ID INT NOT NULL
