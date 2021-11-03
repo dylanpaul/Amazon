@@ -21,7 +21,8 @@ seller_id INT NOT NULL
 FOREIGN KEY(seller_id) REFERENCES Seller(id),
 description VARCHAR(512),
 category VARCHAR(256),
-inventory  INT NOT NULL.
+--inventory  INT NOT NULL.
+available INT NOT NULL, 
 price FLOAT NOT NULL,
 coupon code VARCHAR(32)  NOT NULL,
 REFERENCES Coupon(code), 
