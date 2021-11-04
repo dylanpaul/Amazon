@@ -26,8 +26,7 @@ category VARCHAR(256),
 --inventory  INT NOT NULL.
 available INT NOT NULL, 
 price FLOAT NOT NULL,
-coupon_code VARCHAR(32) NOT NULL
-REFERENCES Coupons(code), 
+coupon_code VARCHAR(32) NOT NULL REFERENCES Coupons(code), 
 PRIMARY KEY (name, seller_id)
 );
 
@@ -41,4 +40,15 @@ quantity INT NOT NULL,
 fulfilled_status BOOLEAN NOT NULL,
 PRIMARY KEY (order_id, product_name, seller_ID_2),
 FOREIGN KEY(product_name, seller_ID_2) REFERENCES Products(name, seller_id)
+);
+
+CREATE TABLE Cart_Items
+(user_id INT NOT NULL REFERENCES Users(id), --why is this a foeign key
+product_name VARCHAR(256),
+seller_id INT NOT NULL,
+quantity INT NOT NULL,
+coupon_code VARCHAR(32), --check why not the same as products coupon_code
+PRIMARY KEY(user_id, product_name, seller_id),
+FOREIGN KEY(product_name, seller_id) REFERENCES Products(name, seller_id),
+CHECK (quantity > 0) -- we want to check if the Cart_Items(quantity) <= Products(inventory), but this check should occur at the time of the purchase
 );
