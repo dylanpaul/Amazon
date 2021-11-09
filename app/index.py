@@ -23,3 +23,12 @@ def index():
     return render_template('index.html',
                            avail_products=products,
                            purchase_history=purchases)
+
+@bp.route('/product')
+def product():
+    # get all available products for sale:
+    products = Product.get(product.id)
+    # render the page by adding information to the index.html file
+    return render_template('product.html',
+                           avail_products=products,
+                           purchase_history=purchases)
