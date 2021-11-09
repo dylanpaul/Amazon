@@ -15,14 +15,12 @@
     </tr>
   </thead>
   <tbody>
-    {% for product in avail_products%}
       <tr>
-        <th scope="row">{{product.id}}</th>
-        <td>{{product.name}}</td>
-        <td>{{product.seller_id}}</td>
-        <td>{{product.price}}</td>
+        <th scope="row">{{prod.id}}</th>
+        <td>{{prod.name}}</td>
+        <td>{{prod.seller_id}}</td>
+        <td>{{prod.price}}</td>
       </tr>
-    {% endfor %}
   </tbody>
 </table>
 
