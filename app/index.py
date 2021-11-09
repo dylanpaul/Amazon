@@ -24,11 +24,10 @@ def index():
                            avail_products=products,
                            purchase_history=purchases)
 
-@bp.route('/product')
-def product():
-    # get all available products for sale:
-    products = Product.get(product.id)
+@bp.route('/product/<pid>')
+def product(pid):
+    # get the product info for one product
+    product1 = Product.get(pid)
     # render the page by adding information to the index.html file
     return render_template('product.html',
-                           avail_products=products,
-                           purchase_history=purchases)
+                           page = product1)
