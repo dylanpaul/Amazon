@@ -10,30 +10,33 @@
     <tr>
       <th scope="col">Product ID</th>
       <th scope="col">Product Name</th>
-      <th scope="col">Price</th>
     </tr>
   </thead>
   <tbody>
       <tr>
         <th scope="row">{{prod[0].id}}</th>
         <td>{{prod[0].name}}</td>
-        <td>{{prod[0].price}}</td>
       </tr>
   </tbody>
 </table>
+     
 
 <table class='table table-hover table-bordered container'>
   <thead class="thead-dark">
     <tr>
       <th scope="col">Sellers</th>
+      <th scope="col">Price</th>
+      <th scope="col"></th>
     </tr>
   </thead>
   <tbody>
-    {%for seller in prod%}
+      {% for seller in prod%}
       <tr>
-        <th scope="row">{{seller.seller_id}}</th>
+        <td>{{seller.seller_id}}</td>
+        <td>{{seller.price}}</td>
+        <td><a class="btn btn-secondary" href="{{ url_for('users.register') }}" role="button">Add to Cart</a></td>
       </tr>
-    {% endfor %}
+      {% endfor %}
   </tbody>
 </table>
 
