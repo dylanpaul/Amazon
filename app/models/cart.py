@@ -11,12 +11,30 @@ class Cart:
         self.coupon_code = coupon_code
 
     @staticmethod
-    def get_cart_uid(user_id):
+    def get_cart_uid(u_id):
+        print("here5")
         rows = app.db.execute('''
 SELECT user_id, product_id, seller_id, quantity, coupon_code
 FROM Cart_Items
 WHERE user_id = :user_id
 ''',
-                              user_id=user_id)
+                              user_id=u_id)
+        print(rows)
         return [Cart(*row) for row in rows]
         #return Product(*(rows[0])) if rows is not None else None
+
+    @staticmethod
+    def add(pid, sid, cid, user_id):
+        print("here?")
+        try:
+            app.db.execute("""
+INSERT INTO Cart_Items(user_id, product_id, seller_id, quantity, coupon_code)
+VALUES(:user_id, :pid, :sid, 1, :cid)
+""",
+                                user_id = user_id,
+                                pid = pid,
+                                sid = sid,
+                                cid= cid)
+        except:
+            print("error")
+        return 
