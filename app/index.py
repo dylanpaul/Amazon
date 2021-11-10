@@ -33,10 +33,13 @@ def product(pid):
     return render_template('product.html',
                            prod = product1)
 
-@bp.route('/cart')
-def cart():
+@bp.route('/cart/<pid>/<sid>/<cid>')
+def cart(pid,sid,cid):
     #get cart for one user
+    print(pid,sid,cid)
     if current_user.is_authenticated:
+        print("here?3")
+        Cart.add(int(pid),int(sid),cid,current_user.id)
         cart1 = Cart.get_cart_uid(current_user.id)
     return render_template('cart.html',
                            cart_things = cart1)
