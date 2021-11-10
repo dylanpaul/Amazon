@@ -9,17 +9,15 @@
   <thead class="thead-dark">
     <tr>
       <th scope="col">Product ID</th>
-      <th scope="col">Product Name</th>
-      <th scope="col">Price</th>
+      <th scope="col">Seller ID</th>
       <th scope="col">Quantity</th>
     </tr>
   </thead>
   <tbody>
     {% for thing in cart_things%}
       <tr>
-        <th scope="row">{{thing.id}}</th>
-        <td>{{thing.name}}</td>
-        <td>{{thing.price}}</td>
+        <th scope="row">{{thing.product_id}}</th>
+        <td>{{thing.seller_id}}</td>
         <td>{{thing.quantity}}</td>
       </tr>
     {% endfor %}

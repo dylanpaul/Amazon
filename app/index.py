@@ -4,6 +4,7 @@ import datetime
 
 from .models.product import Product
 from .models.purchase import Purchase
+from .models.cart import Cart
 
 from flask import Blueprint
 bp = Blueprint('index', __name__)
@@ -36,7 +37,7 @@ def product(pid):
 def cart():
     #get cart for one user
     if current_user.is_authenticated:
-        cart1 = Cart_Items.get_cart_uid(current_user.id)
+        cart1 = Cart.get_cart_uid(current_user.id)
     return render_template('cart.html',
                            cart_things = cart1)
 
