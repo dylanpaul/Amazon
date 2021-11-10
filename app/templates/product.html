@@ -26,6 +26,7 @@
     <tr>
       <th scope="col">Sellers</th>
       <th scope="col">Price</th>
+      <th scope="col">Inventory</th>
       <th scope="col"></th>
     </tr>
   </thead>
@@ -34,7 +35,8 @@
       <tr>
         <td>{{seller.seller_id}}</td>
         <td>{{seller.price}}</td>
-        <td><a class="btn btn-secondary" href="{{ url_for('users.register') }}" role="button">Add to Cart</a></td>
+        <td>{{seller.inventory}}</td>
+        <td><a class="btn btn-secondary" href="{{ url_for('index.cart')}}" role="button">Add to Cart</a></td>
       </tr>
       {% endfor %}
   </tbody>
