@@ -36,7 +36,7 @@
         <td>{{seller.seller_id}}</td>
         <td>{{seller.price}}</td>
         <td>{{seller.inventory}}</td>
-        <td><a class="btn btn-secondary" href="{{ url_for('index.cart')}}" role="button">Add to Cart</a></td>
+        <td><a class="btn btn-secondary" href="{{ url_for('index.cart', pid = seller.id, sid = seller.seller_id, cid = seller.coupon_code)}}" role="button">Add to Cart</a></td>
       </tr>
       {% endfor %}
   </tbody>
