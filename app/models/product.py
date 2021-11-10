@@ -22,7 +22,8 @@ FROM Products
 WHERE id = :id
 ''',
                               id=id)
-        return Product(*(rows[0])) if rows is not None else None
+        return [Product(*row) for row in rows]
+        #return Product(*(rows[0])) if rows is not None else None
 
     @staticmethod
     def get_all(available=True):
