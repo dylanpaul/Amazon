@@ -26,6 +26,8 @@ def index():
 
 @bp.route('/product/<pid>')
 def product(pid):
+    # get the product info for one product
+    product1 = Product.get(pid)
     # render the page by adding information to the index.html file
     return render_template('product.html',
-                           prod = Product.get(pid))
+                           page = product1)
