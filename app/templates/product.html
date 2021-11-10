@@ -15,9 +15,9 @@
   </thead>
   <tbody>
       <tr>
-        <th scope="row">{{page[0].id}}</th>
-        <td>{{page[0].name}}</td>
-        <td>{{page[0].price}}</td>
+        <th scope="row">{{prod[0].id}}</th>
+        <td>{{prod[0].name}}</td>
+        <td>{{prod[0].price}}</td>
       </tr>
   </tbody>
 </table>
@@ -29,7 +29,7 @@
     </tr>
   </thead>
   <tbody>
-    {%for seller in page%}
+    {%for seller in prod%}
       <tr>
         <th scope="row">{{seller.seller_id}}</th>
       </tr>
