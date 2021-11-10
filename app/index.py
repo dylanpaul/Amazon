@@ -31,4 +31,4 @@ def product(pid):
     product1 = Product.get(pid)
     # render the page by adding information to the index.html file
     return render_template('product.html',
-                           page = product1)
+                           prod = product1)
