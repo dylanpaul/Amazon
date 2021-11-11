@@ -46,3 +46,16 @@ delete from cart_items where user_id = :user_id
         except:
             print("error")
         return
+    
+    @staticmethod
+    def remove(u_id, p_id, s_id):
+        try:
+            app.db.execute("""
+delete from cart_items where user_id = :user_id and product_id = :pid and seller_id = :sid
+""",
+                                user_id = u_id,
+                                pid = p_id,
+                                sid = s_id)
+        except:
+            print("error")
+        return
