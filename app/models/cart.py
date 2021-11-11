@@ -12,14 +12,12 @@ class Cart:
 
     @staticmethod
     def get_cart_uid(u_id):
-        print("here5")
         rows = app.db.execute('''
 SELECT user_id, product_id, seller_id, quantity, coupon_code
 FROM Cart_Items
 WHERE user_id = :user_id
 ''',
                               user_id=u_id)
-        print(rows)
         return [Cart(*row) for row in rows]
         #return Product(*(rows[0])) if rows is not None else None
 
