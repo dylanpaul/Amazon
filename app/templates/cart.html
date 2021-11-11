@@ -3,7 +3,6 @@
 {% block content %}
 
 <br><br>
-
 <h2>Cart Items:</h2>
 <table class='table table-hover table-bordered container'>
   <thead class="thead-dark">
@@ -11,6 +10,7 @@
       <th scope="col">Product ID</th>
       <th scope="col">Seller ID</th>
       <th scope="col">Quantity</th>
+      <th scope="col"></th>
     </tr>
   </thead>
   <tbody>
@@ -19,8 +19,12 @@
         <th scope="row">{{thing.product_id}}</th>
         <td>{{thing.seller_id}}</td>
         <td>{{thing.quantity}}</td>
+        <td><a class="btn btn-secondary" href="{{ url_for('index.cart', pid = thing.id, sid = thing.seller_id, cid = thing.coupon_code)}}" role="button">Remove Item</a></td>
       </tr>
     {% endfor %}
   </tbody>
 </table>
+<br><br>
+<a class="btn btn-secondary" href="{{ url_for('index.index')}}" role="button">Continue Shopping</a></td>
+<a class="btn btn-secondary" href="{{ url_for('index.checkout')}}" role="button">Complete Purchase</a></td>
 {% endblock %}
