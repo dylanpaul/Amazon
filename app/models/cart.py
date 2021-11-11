@@ -12,20 +12,17 @@ class Cart:
 
     @staticmethod
     def get_cart_uid(u_id):
-        print("here5")
         rows = app.db.execute('''
 SELECT user_id, product_id, seller_id, quantity, coupon_code
 FROM Cart_Items
 WHERE user_id = :user_id
 ''',
                               user_id=u_id)
-        print(rows)
         return [Cart(*row) for row in rows]
         #return Product(*(rows[0])) if rows is not None else None
 
     @staticmethod
     def add(pid, sid, cid, user_id):
-        print("here?")
         try:
             app.db.execute("""
 INSERT INTO Cart_Items(user_id, product_id, seller_id, quantity, coupon_code)
@@ -38,3 +35,27 @@ VALUES(:user_id, :pid, :sid, 1, :cid)
         except:
             print("error")
         return 
+    
+    @staticmethod
+    def clear(u_id):
+        try:
+            app.db.execute("""
+delete from cart_items where user_id = :user_id
+""",
+                                user_id = u_id)
+        except:
+            print("error")
+        return
+    
+    @staticmethod
+    def remove(u_id, p_id, s_id):
+        try:
+            app.db.execute("""
+delete from cart_items where user_id = :user_id and product_id = :pid and seller_id = :sid
+""",
+                                user_id = u_id,
+                                pid = p_id,
+                                sid = s_id)
+        except:
+            print("error")
+        return
