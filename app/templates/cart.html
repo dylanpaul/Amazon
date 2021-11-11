@@ -19,7 +19,7 @@
         <th scope="row">{{thing.product_id}}</th>
         <td>{{thing.seller_id}}</td>
         <td>{{thing.quantity}}</td>
-        <td><a class="btn btn-secondary" href="{{ url_for('index.cart', pid = thing.id, sid = thing.seller_id, cid = thing.coupon_code)}}" role="button">Remove Item</a></td>
+        <td><a class="btn btn-secondary" href="{{url_for('index.remove', pid = thing.product_id, sid = thing.seller_id)}}" role="button">Remove Item</a></td>
       </tr>
     {% endfor %}
   </tbody>

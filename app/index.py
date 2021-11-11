@@ -50,5 +50,13 @@ def checkout():
         Cart.clear(current_user.id)
     return render_template('checkout.html')
 
+@bp.route('/remove/<pid>/<sid>')
+def remove(pid,sid):
+    if current_user.is_authenticated:
+        Cart.remove(current_user.id, pid, sid)
+        new_cart = Cart.get_cart_uid(current_user.id)
+    return render_template('cart.html',
+                           cart_things = new_cart)
+
 
 
