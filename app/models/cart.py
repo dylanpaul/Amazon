@@ -25,7 +25,6 @@ WHERE user_id = :user_id
 
     @staticmethod
     def add(pid, sid, cid, user_id):
-        print("here?")
         try:
             app.db.execute("""
 INSERT INTO Cart_Items(user_id, product_id, seller_id, quantity, coupon_code)
@@ -38,3 +37,14 @@ VALUES(:user_id, :pid, :sid, 1, :cid)
         except:
             print("error")
         return 
+    
+    @staticmethod
+    def clear(u_id):
+        try:
+            app.db.execute("""
+delete from cart_items where user_id = :user_id
+""",
+                                user_id = u_id)
+        except:
+            print("error")
+        return

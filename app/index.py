@@ -36,12 +36,17 @@ def product(pid):
 @bp.route('/cart/<pid>/<sid>/<cid>')
 def cart(pid,sid,cid):
     #get cart for one user
-    print(pid,sid,cid)
     if current_user.is_authenticated:
-        print("here?3")
         Cart.add(int(pid),int(sid),cid,current_user.id)
         cart1 = Cart.get_cart_uid(current_user.id)
     return render_template('cart.html',
                            cart_things = cart1)
+
+@bp.route('/checkout')
+def checkout():
+    if current_user.is_authenticated:
+        Cart.clear(current_user.id)
+    return render_template('checkout.html')
+
 
 
