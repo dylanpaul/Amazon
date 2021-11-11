@@ -5,6 +5,7 @@ import datetime
 from .models.product import Product
 from .models.purchase import Purchase
 from .models.cart import Cart
+from .models.user import User
 
 from flask import Blueprint
 bp = Blueprint('index', __name__)
@@ -29,9 +30,11 @@ def index():
 def product(pid):
     # get the product info for one product
     product1 = Product.get(pid)
+    #seller_name = User.get(product1.seller_id)
     # render the page by adding information to the index.html file
     return render_template('product.html',
                            prod = product1)
+                           #name = seller_name)
 
 @bp.route('/cart/<pid>/<sid>/<cid>')
 def cart(pid,sid,cid):

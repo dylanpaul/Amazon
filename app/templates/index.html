@@ -36,13 +36,13 @@
     <tr>
       <th scope="col">Purchase ID</th>
       <th scope="col">Product ID</th>
-      <th scope="col">Price</th>
+      <th scope="col">Order Date</th>
     </tr>
   </thead>
   <tbody>
     {% for purchase in purchase_history%}
       <tr>
-        <th scope="row">{{purchase.order_id}}</th>
+        <th scope="row">{{purchase.id}}</th>
         <td>{{purchase.product_id}}</td>
         <td>{{purchase.time_purchased}}</td>
       </tr>
