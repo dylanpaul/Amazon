@@ -2,8 +2,8 @@ from flask import current_app as app
 
 
 class Purchase:
-    def __init__(self, order_id, product_id, seller_ID_2, buyer_id, time_purchased, quantity, fulfilled_status):
-        self.order_id = order_id
+    def __init__(self, id, product_id, seller_ID_2, buyer_id, time_purchased, quantity, fulfilled_status):
+        self.id = id
         self.product_id= product_id
         self.seller_ID_2 = seller_ID_2
         self.buyer_id = buyer_id
@@ -14,7 +14,7 @@ class Purchase:
     @staticmethod
     def get(buyer_id):
         rows = app.db.execute('''
-SELECT order_id, product_id, seller_ID_2, buyer_id, time_purchased, quantity, fulfilled_status
+SELECT id, product_id, seller_ID_2, buyer_id, time_purchased, quantity, fulfilled_status
 FROM Purchases
 WHERE buyer_id = :buyer_id
 ''',
@@ -24,7 +24,7 @@ WHERE buyer_id = :buyer_id
     @staticmethod
     def get_all_by_uid_since(buyer_id, since):
         rows = app.db.execute('''
-SELECT order_id, product_id, seller_ID_2, buyer_id, time_purchased, quantity, fulfilled_status
+SELECT id, product_id, seller_ID_2, buyer_id, time_purchased, quantity, fulfilled_status
 FROM Purchases
 WHERE buyer_id = :buyer_id
 AND time_purchased >= :since
@@ -38,16 +38,20 @@ ORDER BY time_purchased DESC
     def add_purchases(u_id, their_purchases):
         for prod in their_purchases:
             try:
-                app.db.execute("""
-INSERT INTO Purchases(order_id, product_id, seller_ID_2, buyer_id, time_purchased, quantity, fulfilled_status)
-VALUES(:oid, :pid, :sid, :user_id, :date, :quantity, 'TRUE')
+                rows = app.db.execute("""
+INSERT INTO Purchases(product_id, seller_ID_2, buyer_id, time_purchased, quantity, fulfilled_status)
+VALUES(:pid, :sid, :user_id, current_timestamp, :quantity, 'TRUE')
+RETURNING id
 """,
-                                oid = 7, #what to do about order id?
+                                #oid = id, #what to do about order id?
                                 user_id = u_id,
-                                date = '9/10/21 13:12', #how to make a current time stamp?
+                                #date = datetime.now(), #current_timestamp, #'9/10/21 13:12', #how to make a current time stamp?
                                 pid = prod.product_id, 
                                 sid = prod.seller_id,
                                 quantity = prod.quantity)
+            
             except:
                 print("error")
+        id = rows[0][0]
         return
+        #id = rows[0][0]
