@@ -45,6 +45,8 @@ def cart(pid,sid,cid):
 @bp.route('/checkout')
 def checkout():
     if current_user.is_authenticated:
+        their_purchase = Cart.get_cart_uid(current_user.id)
+        Purchase.add_purchases(current_user.id, their_purchase)
         Cart.clear(current_user.id)
     return render_template('checkout.html')
 
