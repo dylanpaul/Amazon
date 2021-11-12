@@ -52,6 +52,6 @@ RETURNING id
             
             except:
                 print("error")
-        id = rows[0][0]
+        #id = rows[0][0]
         return
         #id = rows[0][0]

@@ -18,7 +18,7 @@ class Product:
     def get(id):
         rows = app.db.execute('''
 SELECT id, name, seller_id, description, category, inventory, available, price, coupon_code
-FROM Products
+FROM Products 
 WHERE id = :id
 ''',
                               id=id)
@@ -35,6 +35,15 @@ WHERE available = :available
                               available=available)
         return [Product(*row) for row in rows]
 
+    @staticmethod
+    def get_seller_info(sid):
+        rows = app.db.execute('''
+SELECT id, name, seller_id, description, category, inventory, available, price, coupon_code
+FROM Products 
+WHERE seller_id = :sid
+''',
+                              sid= sid)
+        return [Product(*row) for row in rows]
 
 #   @staticmethod
 #  def get_unique(available=True):
