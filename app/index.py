@@ -62,4 +62,11 @@ def remove(pid,sid):
                            cart_things = new_cart)
 
 
+@bp.route('/seller/<sid>')
+def seller_info(sid):
+    seller1 = Product.get_seller_info(sid)
+    return render_template('seller.html',
+                           seller = seller1)
+
+
 
