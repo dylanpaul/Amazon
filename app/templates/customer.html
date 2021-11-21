@@ -1,0 +1,73 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+
+
+<h2>User Info</h2>
+<table class='table table-hover table-bordered container'>
+  <thead class="thead-dark">
+    <tr>
+      <th scope="col">User Id</th>
+      <th scope="col">Name</th>
+      <th scope="col">Email</th>
+    </tr>
+  </thead>
+  <tbody>
+      <tr>
+        <th scope="row">{{user1.id}}</th>
+        <td>{{user1.firstname + " " + user1.lastname}}</td>
+        <td>{{user1.email}}</td>
+      </tr>
+  </tbody>
+</table>
+
+
+{% if seller != None %}
+<h2>Your Products:</h2>
+<table class='table table-hover table-bordered container'>
+  <thead class="thead-dark">
+    <tr>
+      <th scope="col">Product Name</th>
+      <th scope="col"> ID</th>
+      <th scope="col"> Price</th>
+      <th scope="col">Inventory</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for s in seller%}
+      <tr>
+        <th scope="row">{{s.name}}</th>
+        <td>{{s.id}}</td>
+        <td>{{s.price}}</td>
+        <td>{{s.inventory}}</td>
+      </tr>
+    {% endfor %}
+  </tbody>
+</table>
+{% endif %}
+
+<a href="{{ url_for('index.edit_inventory', sid = user1.id)}}" type="button" class="btn btn-light">Add  Product</a>
+<!--sid = user1.id)-->
+<br><br>
+<h2>Your recent purchases:</h2>
+<table class='table table-hover table-bordered container'>
+  <thead class="thead-dark">
+    <tr>
+      <th scope="col">Purchase ID</th>
+      <th scope="col">Product ID</th>
+      <th scope="col">Order Date</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for purchase in purchase_history%}
+      <tr>
+        <th scope="row">{{purchase.id}}</th>
+        <td>{{purchase.product_id}}</td>
+        <td>{{purchase.time_purchased}}</td>
+      </tr>
+    {% endfor %}
+  </tbody>
+</table>
+
+{% endblock %}

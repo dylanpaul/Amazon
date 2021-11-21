@@ -43,7 +43,33 @@ FROM Products
 WHERE seller_id = :sid
 ''',
                               sid= sid)
-        return [Product(*row) for row in rows]
+        return [Product(*row) for row in rows] if rows is not None else None
+
+    @staticmethod
+    def add_product(name, sid, description, category, inventory, available, price, coupon_code):
+        #try:
+        print("here?")
+        rows = app.db.execute("""
+INSERT INTO Products(name, seller_id, description, category, inventory, available, price, coupon_code)
+VALUES(:name, :seller_id, :description, :category, :inventory, :available, :price, :coupon_code)
+RETURNING id
+""",
+                                name = name,
+                                seller_id = sid,
+                                description = description,
+                                category = category,
+                                inventory = inventory,
+                                available = available,
+                                price = price,
+                                coupon_code = coupon_code)
+                                    
+            #except:
+             #   print("error")
+        #id = rows[0][0]
+        return id
+        #id = rows[0][0]
+
+
 
 #   @staticmethod
 #  def get_unique(available=True):
