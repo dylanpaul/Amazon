@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+
+{% block content %}
+</head>
+<form action="{{ url_for('index.test')}}" method="post">
+<div>
+    <select name= "product" class = "selectpicker form-control">
+        {% for product in products%}
+        <option value= "{{product.name}}" SELECTED>{{product.name}}</option>"
+        {% endfor %}
+    </select>
+</div>
+<input type="submit" value="Submit"/>
+</body>
+</form>
+
+{% endblock %} 

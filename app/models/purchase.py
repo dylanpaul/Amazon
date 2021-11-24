@@ -24,15 +24,17 @@ WHERE buyer_id = :buyer_id
     @staticmethod
     def get_all_by_uid_since(buyer_id, since):
         rows = app.db.execute('''
-SELECT id, product_id, seller_ID_2, buyer_id, time_purchased, quantity, fulfilled_status
-FROM Purchases
+SELECT pu.id, pu.product_id, pu.seller_ID_2, pu.buyer_id, pu.time_purchased, pu.quantity, pu.fulfilled_status, pr.name
+FROM Purchases as pu, Products as pr
 WHERE buyer_id = :buyer_id
+AND pr.id = pu.product_id
 AND time_purchased >= :since
 ORDER BY time_purchased DESC
 ''',
                               buyer_id=buyer_id,
                               since=since)
-        return [Purchase(*row) for row in rows]
+        return [row for row in rows]
+        #return [Purchase(*row) for row in rows]
     
     @staticmethod
     def add_purchases(u_id, their_purchases):

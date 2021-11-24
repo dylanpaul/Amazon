@@ -34,7 +34,7 @@
   <tbody>
       {% for seller in prod%}
       <tr>
-        <td><a href = "{{ url_for('index.seller_info', sid = seller.seller_id)}}">{{seller.seller_id}}</a></td>
+        <td><a href = "{{ url_for('index.seller_info', sid = seller.seller_id)}}">{{seller.firstname + " " + seller.lastname}}</a></td>
         <td>{{seller.price}}</td>
         <td>{{seller.inventory}}</td>
         <td><a class="btn btn-secondary" href="{{ url_for('index.cart', pid = seller.id, sid = seller.seller_id, cid = seller.coupon_code)}}" role="button">Add to Cart</a></td>

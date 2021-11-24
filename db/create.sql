@@ -13,7 +13,7 @@ id INT NOT NULL PRIMARY KEY REFERENCES Users(id)
 );
 
 CREATE TABLE Coupons
-(code VARCHAR(32) NOT NULL PRIMARY KEY,
+(code VARCHAR(32) PRIMARY KEY,
 percent_off FLOAT NOT NULL
 );
 
@@ -27,7 +27,7 @@ category VARCHAR(256),
 inventory  INT NOT NULL,
 available BOOLEAN NOT NULL, 
 price FLOAT NOT NULL,
-coupon_code VARCHAR(32) NOT NULL REFERENCES Coupons(code),
+coupon_code VARCHAR(32) REFERENCES Coupons(code),
 PRIMARY KEY (id, seller_id)
 );
 

@@ -8,8 +8,8 @@
 <table class='table table-hover table-bordered container'>
   <thead class="thead-dark">
     <tr>
-      <th scope="col">Product ID</th>
-      <th scope="col">Seller ID</th>
+      <th scope="col">Product Name</th>
+      <th scope="col">Seller Name</th>
       <th scope="col">Quantity</th>
       <th scope="col"></th>
     </tr>
@@ -17,8 +17,8 @@
   <tbody>
     {% for thing in cart_things%}
       <tr>
-        <th scope="row">{{thing.product_id}}</th>
-        <td>{{thing.seller_id}}</td>
+        <th scope="row">{{thing.name}}</th>
+        <td>{{thing.firstname + " " + thing.lastname}}</td>
         <td>{{thing.quantity}}</td>
         <td><a class="btn btn-secondary" href="{{url_for('index.remove', pid = thing.product_id, sid = thing.seller_id)}}" role="button">Remove Item</a></td>
       </tr>
