@@ -3,7 +3,7 @@ from flask_login import current_user
 from flask import request
 import datetime
 from flask_wtf import FlaskForm
-from wtforms import StringField, PasswordField, IntegerField, FloatField, SubmitField
+from wtforms import StringField, PasswordField, IntegerField, FloatField, SubmitField, SelectField
 from wtforms.validators import DataRequired
 from flask_babel import _, lazy_gettext as _l
 
@@ -96,12 +96,12 @@ class AddForm(FlaskForm):
     category = StringField(_l('Category'), validators=[DataRequired()])
     inventory = IntegerField(_l('Inventory'), validators=[DataRequired()])
     price = FloatField(_l('price'), validators=[DataRequired()])
-    coupon_code = StringField(_l('Coupon Code'), validators=[DataRequired()])
+    #coupon_code = StringField(_l('Coupon Code'), validators=[DataRequired()])
     submit = SubmitField(_l('Add'))
 
 
-@bp.route('/edit_inventory/<sid>', methods=['GET', 'POST'])
-def edit_inventory(sid):
+@bp.route('/add_product/<sid>', methods=['GET', 'POST'])
+def add_product(sid):
     #name = request.args.get("name")
     #description = request.args.get("description")
     #category = request.args.get("category")
@@ -112,38 +112,65 @@ def edit_inventory(sid):
     form = AddForm()
     if form.validate_on_submit():
         Product.add_product(form.name.data, sid, form.description.data, form.category.data, 
-        form.inventory.data, True, form.price.data, form.coupon_code.data)
+        form.inventory.data, True, form.price.data, None)
+        print(Product)
         return redirect(url_for('index.customer'))
-    return render_template('edit_inventory.html', title = 'Add Product', form = form)
+    return render_template('add_product.html', title = 'Add Product', form = form)
                            #eller = sell)
 
-""""
-class RegistrationForm(FlaskForm):
-    firstname = StringField(_l('First Name'), validators=[DataRequired()])
-    lastname = StringField(_l('Last Name'), validators=[DataRequired()])
-    email = StringField(_l('Email'), validators=[DataRequired(), Email()])
-    password = PasswordField(_l('Password'), validators=[DataRequired()])
-    password2 = PasswordField(
-        _l('Repeat Password'), validators=[DataRequired(),
-                                           EqualTo('password')])
-    submit = SubmitField(_l('Register'))
 
-    def validate_email(self, email):
-        if User.email_exists(email.data):
-            raise ValidationError(_('Already a user with this email.'))
+class DeleteForm(FlaskForm):
+    product = SelectField(_l('Product'), validators=[DataRequired()])
+    submit = SubmitField(_l('Delete'))
 
 
-@bp.route('/register', methods=['GET', 'POST'])
-def register():
-    if current_user.is_authenticated:
-        return redirect(url_for('index.index'))
-    form = RegistrationForm()
-    if form.validate_on_submit():
-        if User.register(form.email.data,
-                         form.password.data,
-                         form.firstname.data,
-                         form.lastname.data):
-            flash('Congratulations, you are now a registered user!')
-            return redirect(url_for('users.login'))
-    return render_template('register.html', title='Register', form=form)
-"""
+#@bp.route('/delete_product/<sid>', methods=['POST', 'GET'])
+#@bp.route('/delete_product/', methods=['POST', 'GET'])
+#def delete_product(sid):
+    # #products = Product.get_seller_info(sid)
+    # products = Product.get_seller_info(sid)
+    # pr = [(prod.name) for prod in products]
+    # form = DeleteForm()
+    # print(products)
+    # form.product.choices = pr
+    # if form.validate_on_submit():
+    #     print(form.product.data)
+    #     Product.delete(sid, form.product.data)
+    #     return redirect(url_for('index.customer'))
+    # return render_template('delete_product.html', title = 'Delete Product', form = form)
+    #form = PostForm()
+    # products = Product.get_seller_info(1)
+    # if request.method == 'POST':
+    #     select = request.form.get(products)
+    # print(str(select))
+    # else:
+    #     return render_template('delete_product.html', products = products, form = form)
+    # print('here')
+
+
+@bp.route('/delete_product/<sid>')
+def delete_product(sid):
+    products = Product.get_seller_info(sid)
+    return render_template('delete_product.html', products = products)
+
+@bp.route('/test', methods=['GET', 'POST'])
+def test():
+    select = request.form.get('product')
+    print(select)
+    return redirect(url_for('index.customer'))
+    return(str(select))
+
+
+#   class EditInventory(FlaskForm):
+#     inventory = StringField(_l('Inventory'), validators=[DataRequired()])
+
+# @bp.route('/edit_inventory/<pid>', methods=['GET', 'POST'])
+# def edit_inventory(pid):
+#     form = EditInventory()
+#     if form.validate_on_submit():
+#         Product.edit_inv(form.product.data)
+#         return redirect(url_for('index.customer'))
+#     return render_template('edit_inventory.html', 
+#                             title = 'Edit Inventory', 
+#                             form = form,
+#                             product = )

@@ -45,11 +45,26 @@
   </style>
 </head>
 
+<head>
+  <style>
+    #leftbox {
+        float:left; 
+    }
+    #rightbox {
+        float:right; 
+    }
+  </style>
+</head>
+
 <body background="static/css/title.png">
   <div class="sidenav">
     {% block msg %}
       <h1 style="color:aliceblue">Monte Verde Cloud Forest Shopping</h1>
-      <div style="color: aliceblue; text-align: right; margin-bottom: 25px">
+     <!--<div style="color: aliceblue; margin-bottom: 25px">--->
+      <div id = leftbox style="color: aliceblue; margin-bottom: 25px">
+      <a href="{{ url_for('index.index') }}" type="button" class="btn btn-light">Home</a>
+      </div>
+      <div id = rightbox style="color: aliceblue; text-align: right; margin-bottom: 25px">
         {% if current_user.is_authenticated %}
           Hello {{current_user.firstname}}!
           <a href="{{ url_for('index.customer')}}" type="button" class="btn btn-light">Account Information</a>
