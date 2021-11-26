@@ -40,7 +40,7 @@ WHERE available = :available
     @staticmethod
     def get_seller_info(sid):
         rows = app.db.execute('''
-SELECT p.id, p.name, p.inventory, p.available, p.price, p.coupon_code, u.firstname, u.lastname
+SELECT p.id, p.name, p.seller_id, p.inventory, p.available, p.price, p.coupon_code, u.firstname, u.lastname
 FROM Products as p, Users as u
 WHERE p.seller_id = :sid
 AND u.id = p.seller_id
@@ -84,6 +84,50 @@ where name = :pname and seller_id = :sid
 """,
                                 pname = product_name,
                                 sid = sid)
+        except:
+            print("error")
+        return
+
+    @staticmethod
+    def delete_pid(pid):
+        try:
+            app.db.execute("""
+delete from products
+where id = :pid
+""",
+                                pid = pid)
+        except:
+            print("error")
+        return
+    
+
+    @staticmethod
+    def update_inventory(sid, pid, inv):
+        try:
+            app.db.execute("""
+UPDATE products
+SET inventory = :inventory
+WHERE id = :pid AND seller_id = :sid
+""",
+                             pid = pid,
+                             sid = sid,
+                             inventory = inv)
+        except:
+            print("error")
+        return
+
+
+
+    @staticmethod
+    def update_price(pid, price):
+        try:
+            app.db.execute("""
+UPDATE products
+SET price = :price
+WHERE id = :pid
+""",
+                             pid = pid,
+                             price = price)
         except:
             print("error")
         return

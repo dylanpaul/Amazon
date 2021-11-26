@@ -32,6 +32,7 @@
       <th scope="col"> ID</th>
       <th scope="col"> Price</th>
       <th scope="col">Inventory</th>
+      <th scope="col">Available</th>
     </tr>
   </thead>
   <tbody>
@@ -39,8 +40,9 @@
       <tr>
         <th scope="row">{{s.name}}</th>
         <td>{{s.id}}</td>
-        <td>{{s.price}} <a href="{{ url_for('index.index')}}" type="button" class="btn btn-light">Edit</a></td>
-        <td>{{s.inventory}} <a href="{{ url_for('index.index')}}" type="button" class="btn btn-light">Edit</a></td>
+        <td>{{s.price}} <a href="{{ url_for('index.edit_price', pid = s.id)}}" type="button" class="btn btn-light">Edit</a></td>
+        <td>{{s.inventory}} <a href="{{ url_for('index.update_inventory', sid = user1.id, pid = s.id)}}" type="button" class="btn btn-light">Edit</a></td>
+        <td>{{s.available}}</td>
       </tr>
     {% endfor %}
   </tbody>
