@@ -79,8 +79,7 @@ RETURNING id
     def delete(sid, product_name):
         try:
             app.db.execute("""
-delete from products
-where name = :pname and seller_id = :sid
+delete from products where name = :pname and seller_id = :sid
 """,
                                 pname = product_name,
                                 sid = sid)
@@ -92,8 +91,8 @@ where name = :pname and seller_id = :sid
     def delete_pid(pid):
         try:
             app.db.execute("""
-delete from products
-where id = :pid
+delete from products where id = :pid;
+delete from cart_items where product_id = :pid
 """,
                                 pid = pid)
         except:
