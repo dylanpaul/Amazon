@@ -2,7 +2,7 @@
 
 {% block content %}
 </head>
-<form action="{{ url_for('index.test')}}" method="post">
+<form action="{{ url_for('index.test', sid = products[0].seller_id)}}" method="post">
 <div>
     <select name= "product" class = "selectpicker form-control">
         {% for product in products%}

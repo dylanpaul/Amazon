@@ -4,7 +4,7 @@ from flask import request
 import datetime
 from flask_wtf import FlaskForm
 from wtforms import StringField, PasswordField, IntegerField, FloatField, SubmitField, SelectField
-from wtforms.validators import DataRequired
+from wtforms.validators import DataRequired, InputRequired
 from flask_babel import _, lazy_gettext as _l
 
 from .models.product import Product
@@ -119,10 +119,71 @@ def add_product(sid):
                            #eller = sell)
 
 
-class DeleteForm(FlaskForm):
-    product = SelectField(_l('Product'), validators=[DataRequired()])
-    submit = SubmitField(_l('Delete'))
+@bp.route('/delete_product/<sid>')
+def delete_product(sid):
+    products = Product.get_seller_info(sid)
+    return render_template('delete_product.html', products = products)
 
+@bp.route('/test/<sid>', methods=['GET', 'POST'])
+def test(sid):
+    select = request.form.get('product')
+    #print(select)
+    Product.delete(sid, select)
+    return redirect(url_for('index.customer'))
+    return(str(select))
+
+
+
+class InvForm(FlaskForm):
+    inventory = IntegerField(_l('Inventory'), validators=[InputRequired()])
+    submit = SubmitField(_l('Add'))
+
+@bp.route('/update_inventory/<sid>/<pid>', methods=['GET', 'POST'])
+def update_inventory(sid, pid):
+    form = InvForm()
+    if form.validate_on_submit():
+        inv = form.inventory.data
+        if(inv != 0):
+            print(sid, pid, inv) #techincally dont need seller_id, did incase out pid isnt working correctly
+            Product.update_inventory(sid, pid, inv)
+        else:
+            print(sid, pid, inv) 
+            Product.delete_pid(pid)
+        return redirect(url_for('index.customer'))
+    return render_template('update_inventory.html', title = 'Update Inventory', form = form)
+                           #eller = sell)
+
+
+
+class PriceForm(FlaskForm):
+    price = FloatField(_l('price'), validators=[DataRequired()])
+    submit = SubmitField(_l('Update'))
+
+@bp.route('/edit_price/<pid>', methods=['GET', 'POST'])
+def edit_price(pid):
+    form = PriceForm()
+    if form.validate_on_submit():
+        Product.update_price(pid, form.price.data)
+        return redirect(url_for('index.customer'))
+    return render_template('edit_price.html', title = 'Update Price', form = form)
+                           #eller = sell)
+
+
+
+
+#   class EditInventory(FlaskForm):
+#     inventory = StringField(_l('Inventory'), validators=[DataRequired()])
+
+# @bp.route('/edit_inventory/<pid>', methods=['GET', 'POST'])
+# def edit_inventory(pid):
+#     form = EditInventory()
+#     if form.validate_on_submit():
+#         Product.edit_inv(form.product.data)
+#         return redirect(url_for('index.customer'))
+#     return render_template('edit_inventory.html', 
+#                             title = 'Edit Inventory', 
+#                             form = form,
+#                             product = )
 
 #@bp.route('/delete_product/<sid>', methods=['POST', 'GET'])
 #@bp.route('/delete_product/', methods=['POST', 'GET'])
@@ -147,30 +208,6 @@ class DeleteForm(FlaskForm):
     #     return render_template('delete_product.html', products = products, form = form)
     # print('here')
 
-
-@bp.route('/delete_product/<sid>')
-def delete_product(sid):
-    products = Product.get_seller_info(sid)
-    return render_template('delete_product.html', products = products)
-
-@bp.route('/test', methods=['GET', 'POST'])
-def test():
-    select = request.form.get('product')
-    print(select)
-    return redirect(url_for('index.customer'))
-    return(str(select))
-
-
-#   class EditInventory(FlaskForm):
-#     inventory = StringField(_l('Inventory'), validators=[DataRequired()])
-
-# @bp.route('/edit_inventory/<pid>', methods=['GET', 'POST'])
-# def edit_inventory(pid):
-#     form = EditInventory()
-#     if form.validate_on_submit():
-#         Product.edit_inv(form.product.data)
-#         return redirect(url_for('index.customer'))
-#     return render_template('edit_inventory.html', 
-#                             title = 'Edit Inventory', 
-#                             form = form,
-#                             product = )
+#class DeleteForm(FlaskForm):
+ #   product = SelectField(_l('Product'), validators=[DataRequired()])
+  #  submit = SubmitField(_l('Delete'))
