@@ -2,8 +2,34 @@
 
 {% block content %}
 
+<head>
+  <style>
+    #leftbox {
+        float:left; 
+    }
+    #rightbox {
+        float:right; 
+    }
+  </style>
+</head>
+
 <br><br>
 
+<h6>Filter Category</h6>
+</head>
+<form action="{{ url_for('index.category')}}" method="post">
+<div id = leftbox style="color: aliceblue; text-align: left; margin-bottom: 40px">
+    <select name= "cat" class = "selectpicker form-control">
+        {% for cat in categories%}
+        <option value= "{{cat.category}}" SELECTED>{{cat.category}}</option>"
+        {% endfor %}
+    </select>
+</div>
+<input type="submit" value="Submit"/>
+</body>
+</form>
+
+<p>      </p>
 <h2>Products for sale:</h2>
 <table class='table table-hover table-bordered container'>
   <thead class="thead-dark">

@@ -3,7 +3,7 @@ from flask_login import current_user
 from flask import request
 import datetime
 from flask_wtf import FlaskForm
-from wtforms import StringField, PasswordField, IntegerField, FloatField, SubmitField, SelectField
+from wtforms import StringField, PasswordField, IntegerField, FloatField, SubmitField, SelectField, BooleanField
 from wtforms.validators import DataRequired, InputRequired
 from flask_babel import _, lazy_gettext as _l
 
@@ -28,9 +28,39 @@ def index():
     #else:
      #   purchases = None
     # render the page by adding information to the index.html file
+    cats = Product.get_categories(True)
     return render_template('index.html',
-                           avail_products=products)
+                           avail_products=products,
+                           categories = cats)
                            #purchase_history=purchases)
+
+@bp.route('/category', methods=['GET', 'POST'])
+def category():
+    select = request.form.get('cat')
+    #print(select)
+    products = Product.get_cat(select)
+    cats = Product.get_categories()
+    #products = Product.get_all(True)
+    return render_template('index.html',
+                           avail_products=products,
+                           categories = cats)
+    return(str(select))
+
+
+# @bp.route('/delete_product/<sid>')
+# def delete_product(sid):
+#     products = Product.get_seller_info(sid)
+#     return render_template('delete_product.html', products = products)
+
+# @bp.route('/test/<sid>', methods=['GET', 'POST'])
+# def test(sid):
+#     select = request.form.get('product')
+#     #print(select)
+#     Product.delete(sid, select)
+#     return redirect(url_for('index.customer'))
+#     return(str(select))
+
+
 
 @bp.route('/customer')
 def customer():
@@ -170,6 +200,31 @@ def edit_price(pid):
 
 
 
+@bp.route('/edit_available/<pid>')
+def edit_available(pid):
+    return render_template('edit_available.html', choices = [True, False, pid])
+
+@bp.route('/update_available/<pid>', methods=['GET', 'POST'])
+def update_available(pid):
+    select = request.form.get('available')
+    #print(select)
+    Product.update_available(pid, select)
+    return redirect(url_for('index.customer'))
+    return(str(select))
+
+
+# class AvailForm(FlaskForm):
+#     available = StringField(_l('available'), validators=[DataRequired()])
+#     submit = SubmitField(_l('Update'))
+
+# @bp.route('/edit_available/<pid>', methods=['GET', 'POST'])
+# def edit_available(pid):
+#     form = AvailForm()
+#     if form.validate_on_submit():
+#         Product.update_available(pid, form.available.data)
+#         return redirect(url_for('index.customer'))
+#     return render_template('edit_available.html', title = 'Update Available', form = form)
+#                            #eller = sell)
 
 #   class EditInventory(FlaskForm):
 #     inventory = StringField(_l('Inventory'), validators=[DataRequired()])

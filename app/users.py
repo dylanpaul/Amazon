@@ -22,7 +22,6 @@ class LoginForm(FlaskForm):
 
 @bp.route('/login', methods=['GET', 'POST'])
 def login():
-    
     if current_user.is_authenticated:
         return redirect(url_for('index.index'))
     form = LoginForm()
@@ -58,14 +57,18 @@ class RegistrationForm(FlaskForm):
 @bp.route('/register', methods=['GET', 'POST'])
 def register():
     if current_user.is_authenticated:
+        print("here1")
         return redirect(url_for('index.index'))
+        print("here2")
     form = RegistrationForm()
     if form.validate_on_submit():
+        print("here3")
         if User.register(form.email.data,
                          form.password.data,
                          form.firstname.data,
                          form.lastname.data):
             flash('Congratulations, you are now a registered user!')
+            print("here4")
             return redirect(url_for('users.login'))
     return render_template('register.html', title='Register', form=form)
 
@@ -74,3 +77,41 @@ def register():
 def logout():
     logout_user()
     return redirect(url_for('index.index'))
+
+
+
+class NameForm(FlaskForm):
+    firstname = StringField(_l('firstname')) #validators=[DataRequired()])
+    lastname = StringField(_l('lastname')) #validators=[DataRequired()])
+    submit = SubmitField(_l('Update'))
+
+@bp.route('/edit_name/<uid>', methods=['GET', 'POST'])
+def edit_name(uid):
+    form = NameForm()
+    if form.validate_on_submit():
+        User.update_firstname(uid, form.firstname.data)
+        User.update_lastname(uid, form.lastname.data)
+        return redirect(url_for('index.customer'))
+    return render_template('edit_name.html', title = 'Update Name', form = form)
+                           #eller = sell)
+
+
+class EmailForm(FlaskForm):
+    email = StringField(_l('email'), validators=[DataRequired()])
+    submit = SubmitField(_l('Update'))
+
+@bp.route('/edit_email/<uid>', methods=['GET', 'POST'])
+def edit_email(uid):
+    form = EmailForm()
+    if form.validate_on_submit():
+        email = form.email.data
+        print(email)
+        if User.email_exists(email) == False:
+            print(User.email_exists(email))
+            User.update_email(uid, email)
+        else:
+            print(User.email_exists(email))
+            flash('Email already exists')
+        return redirect(url_for('index.customer'))
+    return render_template('edit_email.html', title = 'Update Email', form = form)
+                           #eller = sell)

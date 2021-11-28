@@ -41,6 +41,7 @@ WHERE email = :email
 
     @staticmethod
     def register(email, password, firstname, lastname):
+        print("urg")
         try:
             rows = app.db.execute("""
 INSERT INTO Users(email, password, firstname, lastname)
@@ -52,6 +53,7 @@ RETURNING id
                                   firstname=firstname,
                                   lastname=lastname)
             id = rows[0][0]
+            print("got here")
             return User.get(id)
         except Exception:
             # likely email already in use; better error checking and
@@ -68,3 +70,45 @@ WHERE id = :id
 """,
                               id=id)
         return User(*(rows[0])) if rows else None
+
+    @staticmethod
+    def update_firstname(uid, firstname):
+        try:
+            app.db.execute("""
+UPDATE Users
+SET firstname = :firstname 
+WHERE id = :uid
+""",
+                             uid = uid,
+                             firstname = firstname)
+        except:
+            print("error")
+        return
+
+    @staticmethod
+    def update_lastname(uid, lastname):
+        try:
+            app.db.execute("""
+UPDATE Users
+SET lastname = :lastname 
+WHERE id = :uid
+""",
+                             uid = uid,
+                             lastname = lastname)
+        except:
+            print("error")
+        return
+
+    @staticmethod
+    def update_email(uid, email):
+        try:
+            app.db.execute("""
+UPDATE Users
+SET email = :email 
+WHERE id = :uid
+""",
+                             uid = uid,
+                             email = email)
+        except:
+            print("error")
+        return
