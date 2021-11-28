@@ -4,30 +4,44 @@
 
 <head>
   <style>
-    #leftbox {
-        float:left; 
+    .box {
+      width: 20%;
+      display: inline-block;
     }
-    #rightbox {
-        float:right; 
+    .box-1 {
+      width: 10%;
+    }
+    .box-2 {
+      width: 10%;
     }
   </style>
 </head>
 
-<br><br>
 
-<h6>Filter Category</h6>
-</head>
+
+<br><br>
+<pre>Filter Category:    Filter Price:</pre>
+<div class = "box box-1">
 <form action="{{ url_for('index.category')}}" method="post">
-<div id = leftbox style="color: aliceblue; text-align: left; margin-bottom: 40px">
     <select name= "cat" class = "selectpicker form-control">
         {% for cat in categories%}
         <option value= "{{cat.category}}" SELECTED>{{cat.category}}</option>"
         {% endfor %}
     </select>
-</div>
-<input type="submit" value="Submit"/>
-</body>
+  </div>
+<input type="submit" value="Apply" style="height:25px; width:50px">
 </form>
+
+<div class = "box box-2">
+  <form action="{{ url_for('index.price')}}" method="post">
+      <select name= "price" class = "selectpicker form-control">
+          {% for price in prices%}
+          <option value= "{{price}}" SELECTED>{{price}}</option>"
+          {% endfor %}
+      </select>
+    </div>
+  <input type="submit" value="Apply" style="height:25px; width:50px">
+  </form>
 
 <p>      </p>
 <h2>Products for sale:</h2>
@@ -55,3 +69,32 @@
 </table>
 
 {% endblock %}
+
+<!-- <div id = leftbox style="color: aliceblue; text-align: left; margin-bottom: 40px"></div> 
+    /* div {
+        position: relative; left: 10px; top: 10px; 
+    }    */-->
+
+    <!-- /* #wrap:after {
+      display: inline-block;
+      height: 0px;
+      clear: both;
+      float: none;
+    }
+    #wrap div {
+      float: left;
+      word-break: break-all;
+    }
+    #one {
+      width:20%;
+      float:left;
+    }
+
+    #two {
+      width:20%;
+
+    }
+    #three {
+      width:20%;
+      float:inherit;
+    } */ -->
