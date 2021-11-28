@@ -167,8 +167,20 @@ WHERE category = :category
                               category=category)
         return [Product(*row) for row in rows]
 
+    @staticmethod
+    def get_cat_price():
+        rows = app.db.execute('''
+SELECT id, name, seller_id, description, category, inventory, available, price, coupon_code
+FROM Products
+ORDER BY price
+''',
+                              )
+        return [Product(*row) for row in rows]
+
+
 
 #   @staticmethod
+#WHERE category = :category
 #  def get_unique(available=True):
         #rows = app.db.execute('''
 #SELECT DISTINCT id, name, category

@@ -16,6 +16,7 @@ from .models.seller import Seller
 from flask import Blueprint
 bp = Blueprint('index', __name__)
 
+categs = ""
 
 @bp.route('/')
 def index():
@@ -29,9 +30,11 @@ def index():
      #   purchases = None
     # render the page by adding information to the index.html file
     cats = Product.get_categories(True)
+    p = ['Low to High', 'High to Low']
     return render_template('index.html',
                            avail_products=products,
-                           categories = cats)
+                           categories = cats,
+                           prices = p)
                            #purchase_history=purchases)
 
 @bp.route('/category', methods=['GET', 'POST'])
@@ -39,11 +42,30 @@ def category():
     select = request.form.get('cat')
     #print(select)
     products = Product.get_cat(select)
+    categs = select
+    #print(categs)
     cats = Product.get_categories()
+    p = ['Low to High', 'High to Low']
     #products = Product.get_all(True)
     return render_template('index.html',
                            avail_products=products,
-                           categories = cats)
+                           categories = cats,
+                           prices = p)
+    return(str(select))
+
+
+@bp.route('/price', methods=['GET', 'POST'])
+def price():
+    select = request.form.get('price')
+    #print(categs)
+    products = Product.get_cat_price()
+    cats = Product.get_categories()
+    p = ["Low to High", "High to Low"]
+    #products = Product.get_all(True)
+    return render_template('index.html',
+                           avail_products=products,
+                           categories = cats,
+                           prices = p)
     return(str(select))
 
 
