@@ -16,8 +16,8 @@
   <tbody>
       <tr>
         <th scope="row">{{user1.id}}</th>
-        <td>{{user1.firstname + " " + user1.lastname}}</td>
-        <td>{{user1.email}}</td>
+        <td>{{user1.firstname + " " + user1.lastname}} <a href="{{ url_for('users.edit_name', uid = user1.id)}}" type="button" class="btn btn-light">Edit</a></td>
+        <td>{{user1.email}}<a href="{{ url_for('users.edit_email', uid = user1.id)}}" type="button" class="btn btn-light">Edit</a></td>
       </tr>
   </tbody>
 </table>
@@ -42,7 +42,7 @@
         <td>{{s.id}}</td>
         <td>{{s.price}} <a href="{{ url_for('index.edit_price', pid = s.id)}}" type="button" class="btn btn-light">Edit</a></td>
         <td>{{s.inventory}} <a href="{{ url_for('index.update_inventory', sid = user1.id, pid = s.id)}}" type="button" class="btn btn-light">Edit</a></td>
-        <td>{{s.available}}</td>
+        <td>{{s.available}} <a href="{{ url_for('index.edit_available', pid = s.id)}}" type="button" class="btn btn-light">Edit</a></td>
       </tr>
     {% endfor %}
   </tbody>

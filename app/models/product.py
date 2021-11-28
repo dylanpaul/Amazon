@@ -132,6 +132,40 @@ WHERE id = :pid
         return
 
 
+    @staticmethod
+    def update_available(pid, avail):
+        try:
+            app.db.execute("""
+UPDATE products
+SET available = :available
+WHERE id = :pid
+""",
+                             pid = pid,
+                             available = avail)
+        except:
+            print("error")
+        return
+
+    @staticmethod
+    def get_categories(available=True):
+        rows = app.db.execute("""
+SELECT category 
+FROM Products
+GROUP BY category
+""",
+                                available = available)           
+        return [row for row in rows]
+
+
+    @staticmethod
+    def get_cat(category):
+        rows = app.db.execute('''
+SELECT id, name, seller_id, description, category, inventory, available, price, coupon_code
+FROM Products
+WHERE category = :category
+''',
+                              category=category)
+        return [Product(*row) for row in rows]
 
 
 #   @staticmethod

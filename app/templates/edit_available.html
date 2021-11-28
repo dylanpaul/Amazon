@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+
+{% block content %}
+</head>
+<form action="{{ url_for('index.update_available', pid = choices[2])}}" method="post">
+<div>
+    <select name= "available" class = "selectpicker form-control">
+        {% for val in choices[:2]%}
+        <option value= "{{val}}" SELECTED>{{val}}</option>"
+        {% endfor %}
+    </select>
+</div>
+<input type="submit" value="Submit"/>
+</body>
+</form>
+
+{% endblock %} 
