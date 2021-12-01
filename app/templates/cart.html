@@ -10,6 +10,7 @@
     <tr>
       <th scope="col">Product Name</th>
       <th scope="col">Seller Name</th>
+      <th scope="col">Unit Price</th>
       <th scope="col">Quantity</th>
       <th scope="col"></th>
     </tr>
@@ -19,6 +20,7 @@
       <tr>
         <th scope="row">{{thing.name}}</th>
         <td>{{thing.firstname + " " + thing.lastname}}</td>
+        <td>{{thing.price}}</td>
         <td>{{thing.quantity}}</td>
         <td><a href="{{ url_for('index.edit_quantity', pid = thing.product_id, sid = thing.seller_id)}}" type="button" class="btn btn-light">Change Quantity</a>
         <a class="btn btn-secondary" href="{{url_for('index.remove', pid = thing.product_id, sid = thing.seller_id)}}" role="button">Remove Item</a></td>
@@ -26,6 +28,8 @@
     {% endfor %}
   </tbody>
 </table>
+<br><br>
+<b>Total Cost: {{total_price}}</b>
 <br><br>
 <a class="btn btn-secondary" href="{{ url_for('index.index')}}" role="button">Continue Shopping</a></td>
 <a class="btn btn-secondary" href="{{ url_for('index.checkout')}}" role="button">Complete Purchase</a></td>

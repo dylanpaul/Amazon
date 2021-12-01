@@ -13,7 +13,7 @@ class Cart:
     @staticmethod
     def get_cart_uid(u_id):
         rows = app.db.execute('''
-SELECT c.user_id, c.product_id, c.seller_id, c.quantity, c.coupon_code, p.name, u.firstname, u.lastname
+SELECT c.user_id, c.product_id, c.seller_id, c.quantity, p.name, u.firstname, u.lastname, p.price
 FROM Cart_Items as c, Products as p, Users as u
 WHERE c.user_id = :user_id
 AND c.seller_id = p.seller_id
@@ -83,3 +83,38 @@ WHERE user_id = :user_id AND product_id = :prod_id AND seller_id = :sell_id
             print("error")
         return
 
+    @staticmethod
+    def get_total_price(uid):
+        try:
+            row_prices = app.db.execute("""
+SELECT (p.price * c.quantity) as row_price
+FROM Products as p, Cart_Items as c
+WHERE c.user_id = :user_id AND c.product_id = p.id AND c.seller_id = p.seller_id
+""",
+                                user_id = uid)
+        except:
+            print("error")
+        
+        total = 0
+        for price in row_prices:
+            total = total + price[0]
+
+        return total
+
+    @staticmethod
+    def check_quantities(uid):
+        status = True
+        try:
+            check = app.db.execute("""
+SELECT *
+FROM Products as p, Cart_Items as c
+WHERE c.user_id = :user_id AND c.product_id = p.id AND c.seller_id = p.seller_id AND c.quantity > p.inventory
+""",
+                                user_id = uid)
+        except:
+            print("error")
+
+        if(len(check) > 0):
+            status = False
+
+        return status

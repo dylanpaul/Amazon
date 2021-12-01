@@ -114,24 +114,30 @@ def cart(pid,sid,cid):
     #get cart for one user
     if current_user.is_authenticated:
         Cart.add(int(pid),int(sid),cid,current_user.id)
-        cart1 = Cart.get_cart_uid(current_user.id)
-    return render_template('cart.html',
-                           cart_things = cart1)
+    return redirect(url_for('index.cartview'))
 
 @bp.route('/cartview')
 def cartview():
     if current_user.is_authenticated:
         cart = Cart.get_cart_uid(current_user.id)
     return render_template('cart.html',
-                           cart_things = cart)
+                           cart_things = cart,
+                           total_price = Cart.get_total_price(current_user.id))
 
 
 @bp.route('/checkout')
 def checkout():
     if current_user.is_authenticated:
         their_purchase = Cart.get_cart_uid(current_user.id)
-        Purchase.add_purchases(current_user.id, their_purchase)
-        Cart.clear(current_user.id)
+        quantities_good = Cart.check_quantities(current_user.id)
+        #balance_good = Cart.check_balance(current_user.id)
+        if quantities_good: #and balance_good
+            Purchase.add_purchases(current_user.id, their_purchase)
+            Cart.clear(current_user.id)
+        elif quantities_good == False:
+            message = "The inventory of one or more products was updated to be smaller than its quantity in your cart. Please update this quantity."
+            return render_template('quantity_error.html', error = message)
+
     return render_template('checkout.html')
 
 @bp.route('/remove/<pid>/<sid>')
