@@ -66,3 +66,20 @@ delete from cart_items where user_id = :user_id and product_id = :pid and seller
         except:
             print("error")
         return
+
+    @staticmethod
+    def update_quantity(uid, pid, sid, quantity):
+        try:
+
+            app.db.execute("""
+UPDATE Cart_Items
+SET quantity = :quant
+WHERE user_id = :user_id AND product_id = :prod_id AND seller_id = :sell_id
+""",
+                                quant = quantity,
+                                prod_id = pid,
+                                sell_id = sid,
+                                user_id = uid)
+        except:
+            print("error")
+        return

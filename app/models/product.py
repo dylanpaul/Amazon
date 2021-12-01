@@ -176,6 +176,16 @@ ORDER BY price
 ''',
                               )
         return [Product(*row) for row in rows]
+    
+    def get_inv(pid, sid):
+        inventory = app.db.execute("""
+SELECT inventory 
+FROM Products
+WHERE id = :prod_id AND seller_id = :sell_id
+""",
+                                prod_id = pid,
+                                sell_id = sid)
+        return inventory
 
 
 

@@ -118,6 +118,14 @@ def cart(pid,sid,cid):
     return render_template('cart.html',
                            cart_things = cart1)
 
+@bp.route('/cartview')
+def cartview():
+    if current_user.is_authenticated:
+        cart = Cart.get_cart_uid(current_user.id)
+    return render_template('cart.html',
+                           cart_things = cart)
+
+
 @bp.route('/checkout')
 def checkout():
     if current_user.is_authenticated:
@@ -218,7 +226,7 @@ def edit_price(pid):
         Product.update_price(pid, form.price.data)
         return redirect(url_for('index.customer'))
     return render_template('edit_price.html', title = 'Update Price', form = form)
-                           #eller = sell)
+                           #seller = sell)
 
 
 
@@ -234,6 +242,27 @@ def update_available(pid):
     return redirect(url_for('index.customer'))
     return(str(select))
 
+class QuantityForm(FlaskForm):
+    quantity = IntegerField(_l('New Quantity:'), validators=[DataRequired()])
+    submit = SubmitField(_l('Update'))
+
+@bp.route('/edit_quantity/<pid>/<sid>', methods=['GET', 'POST'])
+def edit_quantity(pid, sid):
+    form = QuantityForm()
+    inv = Product.get_inv(pid, sid)[0][0]
+    if form.validate_on_submit():
+        print(form.quantity.data)
+        if  form.quantity.data <= inv and form.quantity.data > 0:
+            Cart.update_quantity(current_user.id, pid, sid, form.quantity.data)
+            return redirect(url_for('index.cartview'))
+        elif form.quantity.data > inv:
+            message = "Not enough of this product in stock"
+            return render_template('quantity_error.html', error = message)
+        else:
+            message = "Invalid quantity value"
+            return render_template('quantity_error.html', error = message)
+
+    return render_template('edit_quantity.html', title = 'Update Quantity', form = form, stock = inv)
 
 # class AvailForm(FlaskForm):
 #     available = StringField(_l('available'), validators=[DataRequired()])

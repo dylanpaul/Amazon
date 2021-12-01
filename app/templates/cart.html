@@ -20,7 +20,8 @@
         <th scope="row">{{thing.name}}</th>
         <td>{{thing.firstname + " " + thing.lastname}}</td>
         <td>{{thing.quantity}}</td>
-        <td><a class="btn btn-secondary" href="{{url_for('index.remove', pid = thing.product_id, sid = thing.seller_id)}}" role="button">Remove Item</a></td>
+        <td><a href="{{ url_for('index.edit_quantity', pid = thing.product_id, sid = thing.seller_id)}}" type="button" class="btn btn-light">Change Quantity</a>
+        <a class="btn btn-secondary" href="{{url_for('index.remove', pid = thing.product_id, sid = thing.seller_id)}}" role="button">Remove Item</a></td>
       </tr>
     {% endfor %}
   </tbody>

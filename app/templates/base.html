@@ -63,6 +63,7 @@
      <!--<div style="color: aliceblue; margin-bottom: 25px">--->
       <div id = leftbox style="color: aliceblue; margin-bottom: 25px">
       <a href="{{ url_for('index.index') }}" type="button" class="btn btn-light">Home</a>
+      <a href="{{ url_for('index.cartview') }}" type="button" class="btn btn-light">View Cart</a>
       </div>
       <div id = rightbox style="color: aliceblue; text-align: right; margin-bottom: 25px">
         {% if current_user.is_authenticated %}

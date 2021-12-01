@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<h1>Quantity Error</h1>
+<br><br>
+{{error}}
+<br><br>
+<a class="btn btn-secondary" href="{{ url_for('index.cartview')}}" role="button">Return to Cart</a></td>
+{% endblock %}
+
+
