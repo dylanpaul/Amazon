@@ -13,7 +13,7 @@ class Cart:
     @staticmethod
     def get_cart_uid(u_id):
         rows = app.db.execute('''
-SELECT c.user_id, c.product_id, c.seller_id, c.quantity, p.name, u.firstname, u.lastname, p.price
+SELECT c.user_id, c.product_id, c.seller_id, c.quantity, p.name, u.firstname, u.lastname, p.price, p.inventory
 FROM Cart_Items as c, Products as p, Users as u
 WHERE c.user_id = :user_id
 AND c.seller_id = p.seller_id

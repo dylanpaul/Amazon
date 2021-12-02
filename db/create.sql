@@ -44,7 +44,7 @@ FOREIGN KEY(product_id, seller_ID_2) REFERENCES Products(id, seller_id)
 );
 
 CREATE TABLE Cart_Items
-(user_id INT NOT NULL REFERENCES Users(id), --why is this a foeign key
+(user_id INT NOT NULL REFERENCES Users(id), 
 product_id INT NOT NULL,
 seller_id INT NOT NULL,
 quantity INT NOT NULL,
