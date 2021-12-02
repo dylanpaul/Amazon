@@ -133,6 +133,7 @@ def checkout():
         #balance_good = Cart.check_balance(current_user.id)
         if quantities_good: #and balance_good
             Purchase.add_purchases(current_user.id, their_purchase)
+            Purchase.decrement_stock(their_purchase)
             Cart.clear(current_user.id)
         elif quantities_good == False:
             message = "The inventory of one or more products was updated to be smaller than its quantity in your cart. Please update this quantity."
@@ -231,8 +232,6 @@ def edit_price(pid):
         return redirect(url_for('index.customer'))
     return render_template('edit_price.html', title = 'Update Price', form = form)
                            #seller = sell)
-
-
 
 @bp.route('/edit_available/<pid>')
 def edit_available(pid):

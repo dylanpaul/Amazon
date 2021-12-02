@@ -57,3 +57,20 @@ RETURNING id
         #id = rows[0][0]
         return
         #id = rows[0][0]
+    
+    @staticmethod
+    def decrement_stock(their_purchase):
+        for prod in their_purchase:
+            print((prod.inventory - prod.quantity))
+            try:
+                app.db.execute("""
+UPDATE Products
+SET inventory = :new_val
+WHERE seller_id = :sell_id AND id = :prod_id
+""",            
+                                new_val = (prod.inventory - prod.quantity),
+                                sell_id = prod.seller_id,
+                                prod_id = prod.product_id)
+            except:
+                print("error")
+        return
