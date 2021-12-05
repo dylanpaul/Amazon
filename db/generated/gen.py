@@ -30,7 +30,8 @@ def gen_users(num_users):
             name_components = profile['name'].split(' ')
             firstname = name_components[0]
             lastname = name_components[-1]
-            writer.writerow([uid, email, password, firstname, lastname])
+            balance = f'{str(fake.random_int(max=100))}.{fake.random_int(max=99):02}'
+            writer.writerow([uid, email, password, firstname, lastname, balance])
         print(f'{num_users} generated')
     return
 

@@ -2,7 +2,7 @@ from flask import render_template, redirect, url_for, flash, request
 from werkzeug.urls import url_parse
 from flask_login import login_user, logout_user, current_user
 from flask_wtf import FlaskForm
-from wtforms import StringField, PasswordField, BooleanField, SubmitField
+from wtforms import StringField, PasswordField, BooleanField, SubmitField, FloatField
 from wtforms.validators import ValidationError, DataRequired, Email, EqualTo
 from flask_babel import _, lazy_gettext as _l
 
@@ -115,3 +115,25 @@ def edit_email(uid):
         return redirect(url_for('index.customer'))
     return render_template('edit_email.html', title = 'Update Email', form = form)
                            #eller = sell)
+
+
+class BalanceForm(FlaskForm):
+    balance = FloatField(_l('balance'), validators=[DataRequired()])
+    submit = SubmitField(_l('Withdraw'))
+
+@bp.route('/edit_balance/<uid>', methods=['GET', 'POST'])
+def edit_balance(uid):
+    form = BalanceForm()
+    amount = User.get_balance(uid)[0][0]
+    if form.validate_on_submit():
+        if  form.balance.data <= amount and form.balance.data > 0:
+            User.update_balance(uid, form.balance.data)
+            return redirect(url_for('index.customer'))
+        elif form.balance.data > amount:
+            message = "Withdrawing more than you have"
+            return render_template('balance_withdraw_error.html', error = message)
+        else:
+            message = "Invalid quantity value"
+            return render_template('balance_withdraw_error.html', error = message)
+    return render_template('edit_balance.html', title = 'Add or Withdraw from Balance', form = form, balance = amount)
+                          

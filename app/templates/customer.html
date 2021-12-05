@@ -11,6 +11,7 @@
       <th scope="col">User Id</th>
       <th scope="col">Name</th>
       <th scope="col">Email</th>
+      <th scope="col">Balance</th>
     </tr>
   </thead>
   <tbody>
@@ -18,6 +19,7 @@
         <th scope="row">{{user1.id}}</th>
         <td>{{user1.firstname + " " + user1.lastname}} <a href="{{ url_for('users.edit_name', uid = user1.id)}}" type="button" class="btn btn-light">Edit</a></td>
         <td>{{user1.email}}<a href="{{ url_for('users.edit_email', uid = user1.id)}}" type="button" class="btn btn-light">Edit</a></td>
+        <td>{{user1.balance}}<a href="{{ url_for('users.edit_balance', uid = user1.id)}}" type="button" class="btn btn-light">Edit</a></td></td>
       </tr>
   </tbody>
 </table>

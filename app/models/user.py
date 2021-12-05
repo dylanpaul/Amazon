@@ -6,12 +6,12 @@ from .. import login
 
 
 class User(UserMixin):
-    def __init__(self, id, email, firstname, lastname):
+    def __init__(self, id, email, firstname, lastname, balance):
         self.id = id
         self.email = email
         self.firstname = firstname
         self.lastname = lastname
-        #self.balance = balance
+        self.balance = balance
 
     @staticmethod
     def get_by_auth(email, password):
@@ -64,7 +64,7 @@ RETURNING id
     @login.user_loader
     def get(id):
         rows = app.db.execute("""
-SELECT id, email, firstname, lastname
+SELECT id, email, firstname, lastname, balance
 FROM Users
 WHERE id = :id
 """,
@@ -112,3 +112,28 @@ WHERE id = :uid
         except:
             print("error")
         return
+
+    @staticmethod
+    def update_balance(uid, balance):
+        try:
+            app.db.execute("""
+UPDATE Users
+SET balance = :balance 
+WHERE id = :uid
+""",
+                             uid = uid,
+                             balance = balance)
+        except:
+            print("error")
+        return
+
+
+    @staticmethod
+    def get_balance(id):
+        rows = app.db.execute("""
+SELECT balance
+FROM Users
+WHERE id = :id
+""",
+                              id=id)
+        return rows

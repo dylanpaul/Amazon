@@ -4,8 +4,8 @@ CREATE TABLE Users
 email VARCHAR(256) NOT NULL UNIQUE,
 password VARCHAR(256) NOT NULL,
 firstname VARCHAR(256) NOT NULL,
-lastname VARCHAR(256) NOT NULL
---balance FLOAT NOT NULL  CHECK (balance >= 0) -- can balance be null?
+lastname VARCHAR(256) NOT NULL,
+balance FLOAT NOT NULL
 );
 
 CREATE TABLE Seller(
