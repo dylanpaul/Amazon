@@ -225,6 +225,19 @@ AND p.seller_id = u.id
        return rows
 
 
+    @staticmethod
+    def search(search):
+        search = search + "%"
+        print(search)
+        rows = app.db.execute('''
+SELECT id, name, seller_id, description, category, inventory, available, price
+FROM Products
+WHERE name LIKE :search
+''',
+                                search = search)
+        return [Product(*row) for row in rows]
+
+
 #   @staticmethod
 #WHERE category = :category
 #  def get_unique(available=True):

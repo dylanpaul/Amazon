@@ -2,51 +2,39 @@
 
 {% block content %}
 
+
+
 <head>
-  <style>
-    .box {
-      width: 20%;
-      display: inline-block;
-    }
-    .box-1 {
-      width: 10%;
-    }
-    .box-2 {
-      width: 10%;
-    }
-  </style>
-</head>
-
-
+    <style>
+      .box {
+        width: 20%;
+        display: inline-block;
+      }
+      .box-1 {
+        width: 10%;
+      }
+      .box-2 {
+        width: 10%;
+      }
+      .box-3{
+        width: 10%;
+      }
+    </style>
+  </head>
 
 <br><br>
-<pre>Filter Category:    Filter Price:</pre>
-<div class = "box box-1">
-<form action="{{ url_for('index.category')}}" method="post">
-    <select name= "cat" class = "selectpicker form-control">
-        {% for cat in categories%}
-        <option value= "{{cat.category}}" SELECTED>{{cat.category}}</option>"
-        {% endfor %}
-    </select>
-  </div>
-<input type="submit" value="Apply" style="height:25px; width:50px">
-</form>
-
-<div class = "box box-2">
-  <form action="{{ url_for('index.price')}}" method="post">
-      <select name= "price" class = "selectpicker form-control">
-          {% for price in prices%}
-          <option value= "{{price}}" SELECTED>{{price}}</option>"
-          {% endfor %}
-      </select>
-    </div>
-  <input type="submit" value="Apply" style="height:25px; width:50px">
-  </form>
-  
+<pre>Search Product:</pre>
   <div class = "box box-3">
-  <a href="{{ url_for('index.search_bar')}}" type="button" class="btn btn-light">Search Products</a>
-  </div>
-  
+    <form action="" method="post">
+        {{ form.hidden_tag() }}
+          {{ form.product(size=32) }}<br/>
+          {% for error in form.product.errors %}
+          <span style="color: red;">[{{ error }}]</span>
+          {% endfor %}
+        {{form.submit()}}
+      </form>
+    </div>
+    
 
 <p>      </p>
 <h2>Products for sale:</h2>

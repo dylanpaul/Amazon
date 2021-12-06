@@ -71,6 +71,37 @@ def price():
     return(str(select))
 
 
+
+class SearchForm(FlaskForm):
+    product = StringField(_l('Product'), validators=[DataRequired()])
+    submit = SubmitField(_l('Search'))
+
+@bp.route('/search_bar', methods=['GET', 'POST'])
+def search_bar():
+    form = SearchForm()
+    cats = Product.get_categories(True)
+    p = ['Low to High', 'High to Low']
+    if form.validate_on_submit():
+        products = Product.search(form.product.data)
+    else:
+        products = Product.get_all()
+    #     return redirect(url_for('index.customer'))
+    print(products)
+    return render_template('search_bar.html', 
+                            form = form,
+                            avail_products=products,
+                            categories = cats,
+                            prices = p)
+                           #seller = sell)
+
+
+@bp.route('/edit_fulfilled/<pid>/<status>/<uid>')
+def edit_fulfilled(pid, status, uid):
+    if (status == "False"):
+        print("here")
+        Purchase.edit_fufil(pid)
+    return redirect(url_for('index.seller_page', uid = uid))
+
 # @bp.route('/delete_product/<sid>')
 # def delete_product(sid):
 #     products = Product.get_seller_info(sid)
