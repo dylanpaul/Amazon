@@ -133,18 +133,18 @@ WHERE id = :user_id
 
     @staticmethod
     def update_seller_balances(their_purchase):
-       print(their_purchase)
-       for prod in their_purchase:
-           print(prod)
-           old_bal = User.get_balance(prod.seller_id)[0][0]
-           try:
-               app.db.execute("""
+        print(their_purchase)
+        for prod in their_purchase:
+            print(prod)
+            old_bal = User.get_balance(prod.seller_id)[0][0]
+            try:
+                app.db.execute("""
 UPDATE Users
 SET balance = :new_bal
 WHERE id = :seller_id
 """,
                                new_bal = old_bal + (prod.quantity * prod.price),
                                seller_id = prod.seller_id)  
-           except:
+            except:
                    print("error")
-           return
+        return
