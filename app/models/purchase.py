@@ -115,3 +115,18 @@ WHERE inventory = :zero
             print("error")
         print("end of try")
         return
+
+
+    @staticmethod
+    def update_user_balance(uid, balance, cost):
+        try:
+                app.db.execute("""
+UPDATE Users
+SET balance = :new_val
+WHERE id = :user_id
+""",            
+                                new_val = (balance - cost),
+                                user_id = uid)
+        except:
+                print("error")
+        return

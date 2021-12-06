@@ -118,3 +118,10 @@ WHERE c.user_id = :user_id AND c.product_id = p.id AND c.seller_id = p.seller_id
             status = False
 
         return status
+
+    @staticmethod
+    def check_balance(balance, price):
+        if(balance>=price):
+            return True
+        else:
+            return False

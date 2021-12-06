@@ -4,5 +4,24 @@
 
 <h1>Thank You For Using Mini Amazon!</h1>
 <br><br>
+<h2>Order Summary:</h2>
+<table class='table table-hover table-bordered container'>
+    <thead class="thead-dark">
+      <tr>
+        <th scope="col">Product Name</th>
+        <th scope="col">Seller Name</th>
+        <th scope="col">Unit Price</th>
+        <th scope="col">Quantity</th>
+        <th scope="col"></th>
+      </tr>
+    </thead>
+    <br><br>
+    <b>Old Balance: {{old_balance}}</b>
+    <br><br>
+    <b>Total Cost: {{total}}</b>
+    <br><br>
+    <b>New Balance: {{new_balance}}</b>
+    <br><br>
 <a class="btn btn-secondary" href="{{ url_for('index.index')}}" role="button">Home</a></td>
+    <tbody>
 {% endblock %}

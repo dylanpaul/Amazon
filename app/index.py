@@ -155,24 +155,8 @@ def cartview():
         cart = Cart.get_cart_uid(current_user.id)
     return render_template('cart.html',
                            cart_things = cart,
-                           total_price = Cart.get_total_price(current_user.id))
-
-
-@bp.route('/checkout')
-def checkout():
-    if current_user.is_authenticated:
-        their_purchase = Cart.get_cart_uid(current_user.id)
-        quantities_good = Cart.check_quantities(current_user.id)
-        #balance_good = Cart.check_balance(current_user.id)
-        if quantities_good: #and balance_good
-            Purchase.add_purchases(current_user.id, their_purchase)
-            Purchase.decrement_stock(their_purchase)
-            Cart.clear(current_user.id)
-        elif quantities_good == False:
-            message = "The inventory of one or more products was updated to be smaller than its quantity in your cart. Please update this quantity."
-            return render_template('quantity_error.html', error = message)
-
-    return render_template('checkout.html')
+                           total_price = Cart.get_total_price(current_user.id),
+                           balance = User.get_balance(current_user.id)[0][0])
 
 @bp.route('/remove/<pid>/<sid>')
 def remove(pid,sid):
@@ -299,6 +283,32 @@ def edit_quantity(pid, sid):
             return render_template('quantity_error.html', error = message)
 
     return render_template('edit_quantity.html', title = 'Update Quantity', form = form, stock = inv)
+
+
+@bp.route('/checkout')
+def checkout():
+    if current_user.is_authenticated:
+        their_purchase = Cart.get_cart_uid(current_user.id)
+        quantities_good = Cart.check_quantities(current_user.id)
+        their_balance = User.get_balance(current_user.id)[0][0]
+        total_price = Cart.get_total_price(current_user.id)
+        save = 0 + total_price
+        balance_good = Cart.check_balance(their_balance, save)
+        if quantities_good and balance_good:
+            Purchase.add_purchases(current_user.id, their_purchase)
+            Purchase.decrement_stock(their_purchase)
+            Purchase.update_user_balance(current_user.id, their_balance, save)
+            #Purchase.update_seller_balances(their_purchase)
+            Purchase.make_unavailable()
+            Cart.clear(current_user.id)
+        elif quantities_good == False:
+            message = "The inventory of one or more products was updated to be smaller than its quantity in your cart. Please update this quantity."
+            return render_template('quantity_error.html', error = message)
+        elif balance_good == False:
+            message = "You don't have enough money to buy that. Have you considered getting a job?"
+            return render_template('balance_error.html', error = message, user_id = current_user.id)
+
+    return render_template('checkout.html', total = save, old_balance = their_balance, new_balance = User.get_balance(current_user.id)[0][0])
 
 # class AvailForm(FlaskForm):
 #     available = StringField(_l('available'), validators=[DataRequired()])
