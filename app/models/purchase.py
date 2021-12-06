@@ -148,3 +148,18 @@ WHERE id = :seller_id
             except:
                    print("error")
         return
+
+    @staticmethod
+    def edit_fufil(pid):
+        print(pid)
+        try:
+            rows = app.db.execute('''
+UPDATE Purchases
+SET fulfilled_status = :val
+WHERE id = :pid
+''',
+                               val = 'TRUE',
+                               pid=pid)
+        except:
+                print("error")
+        return

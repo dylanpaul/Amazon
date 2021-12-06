@@ -47,7 +47,7 @@
         <th scope="row">{{purchases[i].id}}</th>
         <td>{{purchases[i].fulfilled_status}} </td>
         <td>{{purchases[i].time_purchased}}</td>
-        <td>{{user_info[i][0][2]}}</td>
+        <td>{{purchases[i].fulfilled_status}} <a href="{{ url_for('index.edit_fulfilled', pid = purchases[i].id, status = purchases[i].fulfilled_status, uid = user1.id)}}" type="button" class="btn btn-light">Mark as Fulfilled</a></td> 
       </tr>
     {% endfor %}
   </tbody>
