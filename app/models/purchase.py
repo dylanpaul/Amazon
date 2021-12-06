@@ -98,3 +98,20 @@ ORDER BY time_purchased DESC
 ''',
                                 seller_id=seller_id)
         return [row[0] for row in rows]
+
+
+    @staticmethod
+    def make_unavailable():
+        print("test____________")
+        try:
+            app.db.execute("""
+UPDATE Products
+SET available = :f
+WHERE inventory = :zero
+""",            
+                                f = False,
+                                zero = 0)
+        except:
+            print("error")
+        print("end of try")
+        return

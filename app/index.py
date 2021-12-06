@@ -18,6 +18,8 @@ bp = Blueprint('index', __name__)
 
 categs = ""
 
+#this is to see merge request
+
 @bp.route('/')
 def index():
     # get all available products for sale:
@@ -128,7 +130,7 @@ def seller_page(uid):
                             purchases = purchases1,
                             user_info = u)
 
-                            
+
 @bp.route('/product/<pid>')
 def product(pid):
     # get the product info for one product
