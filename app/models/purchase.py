@@ -1,5 +1,5 @@
 from flask import current_app as app
-
+from .user import User
 
 class Purchase:
     def __init__(self, id, product_id, seller_ID_2, buyer_id, time_purchased, quantity, fulfilled_status):
@@ -102,7 +102,6 @@ ORDER BY time_purchased DESC
 
     @staticmethod
     def make_unavailable():
-        print("test____________")
         try:
             app.db.execute("""
 UPDATE Products
@@ -130,3 +129,22 @@ WHERE id = :user_id
         except:
                 print("error")
         return
+
+
+    @staticmethod
+    def update_seller_balances(their_purchase):
+       print(their_purchase)
+       for prod in their_purchase:
+           print(prod)
+           old_bal = User.get_balance(prod.seller_id)[0][0]
+           try:
+               app.db.execute("""
+UPDATE Users
+SET balance = :new_bal
+WHERE id = :seller_id
+""",
+                               new_bal = old_bal + (prod.quantity * prod.price),
+                               seller_id = prod.seller_id)  
+           except:
+                   print("error")
+           return

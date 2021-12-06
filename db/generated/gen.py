@@ -5,7 +5,6 @@ from faker import Faker
 num_users = 550
 num_products = 2000
 num_purchases = 2000
-num_coupons = 2000
 num_sellers = 500
 
 Faker.seed(0)
@@ -37,24 +36,10 @@ def gen_users(num_users):
     return
 
 #id
-def gen_coupons(num_coupons):
-    coupons = []
-    with open('Coupons.csv', 'w') as f:
-        writer = get_csv_writer(f)
-        print('Coupons...', end=' ', flush=True)
-        for id in range(num_products):
-            if id % 100 == 0:
-                print(f'{id}', end=' ', flush=True)
-            coupon_code = fake.license_plate() #use license plate random generators as coupon code
-            coupons.append(coupon_code)
-            discount = f'{str(fake.random_int(max=0))}.{fake.random_int(min=1, max=20):02}'
-            writer.writerow([coupon_code, discount])
-        print(f'{num_coupons} generated')
-    return coupons
 
 
-#need id, name, seller_id, description, category, inventory,available(t or f), price, coupon_code
-def gen_products(num_products, coupons):
+#need id, name, seller_id, description, category, inventory,available(t or f), price
+def gen_products(num_products):
     available_pids = []
     with open('Products.csv', 'w') as f:
         writer = get_csv_writer(f)
@@ -69,13 +54,12 @@ def gen_products(num_products, coupons):
             description = fake.sentence(nb_words=4)[:-1] #random description
             category = fake.color_name() #using this as category generator for now
             inventory = f'{str(fake.random_int(max=100))}' #max amount of inventory 100 for now
-            coupon_code = fake.random_element(elements=coupons) #use license plate random generators as coupon code
             available = fake.random_element(elements=('true', 'false'))
             if available == 'true':
                 temp.append(pid)
                 temp.append(seller_id)
                 available_pids.append(temp)
-            writer.writerow([pid, name, seller_id, description, category, inventory, available, price, coupon_code])
+            writer.writerow([pid, name, seller_id, description, category, inventory, available, price])
         print(f'{num_products} generated; {len(available_pids)} available')
     return available_pids
 
@@ -115,7 +99,6 @@ def gen_purchases(num_purchases, available_pids):
 
 
 gen_users(num_users)
-coupons = gen_coupons(num_coupons)
-available_pids = gen_products(num_products, coupons)
+available_pids = gen_products(num_products)
 gen_sellers(num_sellers)
 gen_purchases(num_purchases, available_pids)
