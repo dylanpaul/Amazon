@@ -2,7 +2,7 @@ from flask import current_app as app
 
 
 class Product:
-    def __init__(self, id, name, seller_id, description, category, inventory, available, price, coupon_code):
+    def __init__(self, id, name, seller_id, description, category, inventory, available, price):
         #self.id = id
         self.id = id
         self.name = name
@@ -12,12 +12,11 @@ class Product:
         self.inventory = inventory
         self.available = available
         self.price = price
-        self.coupon_code = coupon_code
 
     @staticmethod
     def get(id):
         rows = app.db.execute('''
-SELECT p.id, p.name, p.seller_id, p.description, p.category, p.inventory, p.available, p.price, p.coupon_code, u.firstname, u.lastname
+SELECT p.id, p.name, p.seller_id, p.description, p.category, p.inventory, p.available, p.price, u.firstname, u.lastname
 FROM Products as p, Users as u
 WHERE p.id = :id
 AND p.seller_id = u.id
@@ -30,7 +29,7 @@ AND p.seller_id = u.id
     @staticmethod
     def get_all(available=True):
         rows = app.db.execute('''
-SELECT id, name, seller_id, description, category, inventory, available, price, coupon_code
+SELECT id, name, seller_id, description, category, inventory, available, price
 FROM Products
 WHERE available = :available
 ''',
@@ -40,7 +39,7 @@ WHERE available = :available
     @staticmethod
     def get_seller_info(sid):
         rows = app.db.execute('''
-SELECT p.id, p.name, p.seller_id, p.inventory, p.available, p.price, p.coupon_code, u.firstname, u.lastname
+SELECT p.id, p.name, p.seller_id, p.inventory, p.available, p.price, u.firstname, u.lastname
 FROM Products as p, Users as u
 WHERE p.seller_id = :sid
 AND u.id = p.seller_id
@@ -50,14 +49,16 @@ AND u.id = p.seller_id
         #return [Product(*row) for row in rows] if rows is not None else None
 
     @staticmethod
-    def add_product(name, sid, description, category, inventory, available, price, coupon_code):
+    def add_product(id, name, sid, description, category, inventory, available, price):
         #try:
-        print("here?")
+        
         rows = app.db.execute("""
-INSERT INTO Products(name, seller_id, description, category, inventory, available, price, coupon_code)
-VALUES(:name, :seller_id, :description, :category, :inventory, :available, :price, :coupon_code)
+INSERT INTO Products(id, name, seller_id, description, category, inventory, available, price)
+VALUES(:id1, :name, :seller_id, :description, :category, :inventory, :available, :price)
 RETURNING id
 """,
+                                
+                                id1 = id,
                                 name = name,
                                 seller_id = sid,
                                 description = description,
@@ -65,7 +66,7 @@ RETURNING id
                                 inventory = inventory,
                                 available = available,
                                 price = price,
-                                coupon_code = coupon_code)
+                                )
                                     
             #except:
              #   print("error")
@@ -160,23 +161,27 @@ GROUP BY category
     @staticmethod
     def get_cat(category):
         rows = app.db.execute('''
-SELECT id, name, seller_id, description, category, inventory, available, price, coupon_code
+SELECT id, name, seller_id, description, category, inventory, available, price
 FROM Products
 WHERE category = :category
+AND available = :av
 ''',
-                              category=category)
+                              category=category,
+                              av = True)
         return [Product(*row) for row in rows]
 
     @staticmethod
     def get_cat_price():
         rows = app.db.execute('''
-SELECT id, name, seller_id, description, category, inventory, available, price, coupon_code
+SELECT id, name, seller_id, description, category, inventory, available, price
 FROM Products
+WHERE available = :av
 ORDER BY price
 ''',
-                              )
+                              av = True)
         return [Product(*row) for row in rows]
     
+    @staticmethod
     def get_inv(pid, sid):
         inventory = app.db.execute("""
 SELECT inventory 
@@ -187,6 +192,37 @@ WHERE id = :prod_id AND seller_id = :sell_id
                                 sell_id = sid)
         return inventory
 
+    @staticmethod
+    def get_count():
+        rows = app.db.execute("""
+SELECT COUNT(*)
+FROM Products
+""",
+                              )
+        return rows[0][0]
+
+
+
+    @staticmethod
+    def get_name(id):
+       name = app.db.execute('''
+SELECT name  
+FROM Products
+WHERE id = :pid
+''',
+                            pid = id)
+       return name[0][0]
+
+    @staticmethod
+    def get_shared(name):
+       rows = app.db.execute('''
+SELECT p.id, p.name, p.seller_id, p.description, p.category, p.inventory, p.available, p.price, u.firstname, u.lastname
+FROM Products as p, Users as u
+WHERE p.name = :n
+AND p.seller_id = u.id
+''',                          
+                           n = name)
+       return rows
 
 
 #   @staticmethod

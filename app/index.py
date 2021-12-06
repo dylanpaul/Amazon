@@ -133,19 +133,20 @@ def seller_page(uid):
 
 @bp.route('/product/<pid>')
 def product(pid):
-    # get the product info for one product
-    product1 = Product.get(pid)
-    #seller_name = User.get(product1.seller_id)
-    # render the page by adding information to the index.html file
-    return render_template('product.html',
-                           prod = product1)
-                           #name = seller_name)
+   # get the name of the clicked product
+   prod_name = Product.get_name(pid)
+   #seller_name = User.get(product1.seller_id)
+   #get all products with that name:
+   prods = Product.get_shared(prod_name)
+   # render the page by adding information to the index.html file
+   return render_template('product.html',
+                          prod = prods)
 
-@bp.route('/cart/<pid>/<sid>/<cid>')
-def cart(pid,sid,cid):
+@bp.route('/cart/<pid>/<sid>')
+def cart(pid,sid):
     #get cart for one user
     if current_user.is_authenticated:
-        Cart.add(int(pid),int(sid),cid,current_user.id)
+        Cart.add(int(pid),int(sid),current_user.id)
     return redirect(url_for('index.cartview'))
 
 @bp.route('/cartview')
@@ -177,23 +178,16 @@ class AddForm(FlaskForm):
     category = StringField(_l('Category'), validators=[DataRequired()])
     inventory = IntegerField(_l('Inventory'), validators=[DataRequired()])
     price = DecimalField(_l('price'), validators=[DataRequired()])
-    #coupon_code = StringField(_l('Coupon Code'), validators=[DataRequired()])
     submit = SubmitField(_l('Add'))
 
 
 @bp.route('/add_product/<sid>', methods=['GET', 'POST'])
 def add_product(sid):
-    #name = request.args.get("name")
-    #description = request.args.get("description")
-    #category = request.args.get("category")
-    #inventory = request.args.get("inventory")
-    #price = request.args.get("price")
-    #coupon_code = request.args.get("coupon_code")
-    #sell = Product.get_seller_info(sid)
     form = AddForm()
+    id1 = Product.get_count() + 1
     if form.validate_on_submit():
-        Product.add_product(form.name.data, sid, form.description.data, form.category.data, 
-        form.inventory.data, True, form.price.data, None)
+        Product.add_product(id1, form.name.data, sid, form.description.data, form.category.data, 
+        form.inventory.data, True, form.price.data)
         print(Product)
         return redirect(url_for('index.customer'))
     return render_template('add_product.html', title = 'Add Product', form = form)
@@ -203,6 +197,9 @@ def add_product(sid):
 @bp.route('/delete_product/<sid>')
 def delete_product(sid):
     products = Product.get_seller_info(sid)
+    if len(products) == 0:
+        message = "Bruh. You can't delete what you don't have. Try again."
+        return render_template('delete_error.html', error = message)
     return render_template('delete_product.html', products = products)
 
 @bp.route('/test/<sid>', methods=['GET', 'POST'])
@@ -211,8 +208,6 @@ def test(sid):
     #print(select)
     Product.delete(sid, select)
     return redirect(url_for('index.customer'))
-    return(str(select))
-
 
 
 class InvForm(FlaskForm):
@@ -297,7 +292,7 @@ def checkout():
             Purchase.add_purchases(current_user.id, their_purchase)
             Purchase.decrement_stock(their_purchase)
             Purchase.update_user_balance(current_user.id, their_balance, save)
-            #Purchase.update_seller_balances(their_purchase)
+            Purchase.update_seller_balances(their_purchase)
             Purchase.make_unavailable()
             Cart.clear(current_user.id)
         elif quantities_good == False:

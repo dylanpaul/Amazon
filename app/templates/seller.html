@@ -20,7 +20,7 @@
         <th scope="row">{{s.name}}</th>
         <td>{{s.price}}</td>
         <td>{{s.inventory}}</td>
-        <td><a class="btn btn-secondary" href="{{ url_for('index.cart', pid = s.id, sid = s.seller_id, cid = s.coupon_code)}}" role="button">Add to Cart</a></td>
+        <td><a class="btn btn-secondary" href="{{ url_for('index.cart', pid = s.id, sid = s.seller_id)}}" role="button">Add to Cart</a></td>
       </tr>
     {% endfor %}
   </tbody>

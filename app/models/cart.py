@@ -2,13 +2,12 @@ from flask import current_app as app
 
 
 class Cart:
-    def __init__(self, user_id, product_id, seller_id, quantity, coupon_code):
+    def __init__(self, user_id, product_id, seller_id, quantity):
         #self.id = id
         self.user_id = user_id
         self.product_id = product_id
         self.seller_id = seller_id
         self.quantity = quantity
-        self.coupon_code = coupon_code
 
     @staticmethod
     def get_cart_uid(u_id):
@@ -29,16 +28,16 @@ AND c.seller_id = u.id
         #return Product(*(rows[0])) if rows is not None else None
 
     @staticmethod
-    def add(pid, sid, cid, user_id):
+    def add(pid, sid, user_id):
         try:
             app.db.execute("""
-INSERT INTO Cart_Items(user_id, product_id, seller_id, quantity, coupon_code)
-VALUES(:user_id, :pid, :sid, 1, :cid)
+INSERT INTO Cart_Items(user_id, product_id, seller_id, quantity)
+VALUES(:user_id, :pid, :sid, 1)
 """,
                                 user_id = user_id,
                                 pid = pid,
                                 sid = sid,
-                                cid= cid)
+                                )
         except:
             print("error")
         return 
