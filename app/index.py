@@ -18,6 +18,7 @@ bp = Blueprint('index', __name__)
 
 categs = ""
 
+#help
 #this is to see merge request
 
 @bp.route('/')
