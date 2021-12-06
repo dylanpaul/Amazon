@@ -3,7 +3,7 @@ from flask_login import current_user
 from flask import request
 import datetime
 from flask_wtf import FlaskForm
-from wtforms import StringField, PasswordField, IntegerField, FloatField, SubmitField, SelectField, BooleanField
+from wtforms import StringField, PasswordField, IntegerField, FloatField, SubmitField, SelectField, BooleanField, DecimalField
 from wtforms.validators import DataRequired, InputRequired
 from flask_babel import _, lazy_gettext as _l
 
@@ -94,11 +94,41 @@ def customer():
     #if Seller.get(current_user.id) != None:
         #seller1 = 1
     seller1 = Product.get_seller_info(current_user.id)
+    isSeller = Seller.get(current_user.id)
+    if isSeller == None:
+        seller1 = None
+    
     return render_template('customer.html',
                            purchase_history=purchases,
                            user1 = user_info,
                            seller = seller1)
 
+
+@bp.route('/seller_page/<uid>')
+def seller_page(uid):
+    #print(sid)
+    if current_user.is_authenticated:
+        purchases = Purchase.get_all_by_uid_since(
+            current_user.id, datetime.datetime(1980, 9, 14, 0, 0, 0))
+        user_info = User.get(current_user.id)
+    purchases1 = Purchase.get_seller(current_user.id)
+    #print(purchases1)
+    #print(purchases1.buyer_id)
+    users = Purchase.get_users(current_user.id)
+    seller1 = Product.get_seller_info(current_user.id)
+    #print(users)
+    u = []
+    for user in users:
+        u.append(User.get_users(user))
+    #print(user_info)
+    #print(u[0][0][3])
+    return render_template('seller_page.html',
+                            user1 = user_info,
+                            seller = seller1,
+                            purchases = purchases1,
+                            user_info = u)
+
+                            
 @bp.route('/product/<pid>')
 def product(pid):
     # get the product info for one product
@@ -160,7 +190,7 @@ class AddForm(FlaskForm):
     description = StringField(_l('Description'), validators=[DataRequired()])
     category = StringField(_l('Category'), validators=[DataRequired()])
     inventory = IntegerField(_l('Inventory'), validators=[DataRequired()])
-    price = FloatField(_l('price'), validators=[DataRequired()])
+    price = DecimalField(_l('price'), validators=[DataRequired()])
     #coupon_code = StringField(_l('Coupon Code'), validators=[DataRequired()])
     submit = SubmitField(_l('Add'))
 
@@ -221,7 +251,7 @@ def update_inventory(sid, pid):
 
 
 class PriceForm(FlaskForm):
-    price = FloatField(_l('price'), validators=[DataRequired()])
+    price = DecimalField(_l('price'), validators=[DataRequired()])
     submit = SubmitField(_l('Update'))
 
 @bp.route('/edit_price/<pid>', methods=['GET', 'POST'])

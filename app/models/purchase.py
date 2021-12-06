@@ -74,3 +74,27 @@ WHERE seller_id = :sell_id AND id = :prod_id
             except:
                 print("error")
         return
+
+    @staticmethod
+    def get_seller(seller_id):
+        rows = app.db.execute('''
+SELECT id, product_id, seller_ID_2, buyer_id, time_purchased, quantity, fulfilled_status
+FROM Purchases
+WHERE seller_ID_2 = :seller_id
+ORDER BY time_purchased DESC
+''',
+                              seller_id=seller_id)
+        return [row for row in rows]
+        #return Purchase(*(rows[0])) if rows else None
+
+
+    @staticmethod
+    def get_users(seller_id):
+        rows = app.db.execute('''
+SELECT buyer_id
+FROM Purchases
+WHERE seller_ID_2 = :seller_id
+ORDER BY time_purchased DESC
+''',
+                                seller_id=seller_id)
+        return [row[0] for row in rows]

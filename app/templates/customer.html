@@ -11,6 +11,7 @@
       <th scope="col">User Id</th>
       <th scope="col">Name</th>
       <th scope="col">Email</th>
+      <th scope="col">Address</th>
       <th scope="col">Balance</th>
     </tr>
   </thead>
@@ -19,40 +20,19 @@
         <th scope="row">{{user1.id}}</th>
         <td>{{user1.firstname + " " + user1.lastname}} <a href="{{ url_for('users.edit_name', uid = user1.id)}}" type="button" class="btn btn-light">Edit</a></td>
         <td>{{user1.email}}<a href="{{ url_for('users.edit_email', uid = user1.id)}}" type="button" class="btn btn-light">Edit</a></td>
-        <td>{{user1.balance}}<a href="{{ url_for('users.edit_balance', uid = user1.id)}}" type="button" class="btn btn-light">Edit</a></td></td>
+        <td>{{user1.addy}}<a href="{{ url_for('users.edit_addy', uid = user1.id)}}" type="button" class="btn btn-light">Edit</a></td>
+        <td>{{user1.balance}}<a href="{{ url_for('users.withdraw_balance', uid = user1.id)}}" type="button" class="btn btn-light">Withdraw</a>
+          <a href="{{ url_for('users.add_balance', uid = user1.id)}}" type="button" class="btn btn-light">Add</a></td>
       </tr>
   </tbody>
 </table>
 
 
 {% if seller != None %}
-<h2>Your Products:</h2>
-<table class='table table-hover table-bordered container'>
-  <thead class="thead-dark">
-    <tr>
-      <th scope="col">Product Name</th>
-      <th scope="col"> ID</th>
-      <th scope="col"> Price</th>
-      <th scope="col">Inventory</th>
-      <th scope="col">Available</th>
-    </tr>
-  </thead>
-  <tbody>
-    {% for s in seller%}
-      <tr>
-        <th scope="row">{{s.name}}</th>
-        <td>{{s.id}}</td>
-        <td>{{s.price}} <a href="{{ url_for('index.edit_price', pid = s.id)}}" type="button" class="btn btn-light">Edit</a></td>
-        <td>{{s.inventory}} <a href="{{ url_for('index.update_inventory', sid = user1.id, pid = s.id)}}" type="button" class="btn btn-light">Edit</a></td>
-        <td>{{s.available}} <a href="{{ url_for('index.edit_available', pid = s.id)}}" type="button" class="btn btn-light">Edit</a></td>
-      </tr>
-    {% endfor %}
-  </tbody>
-</table>
+<h2>Hi Seller!</h2>
+<a href="{{ url_for('index.seller_page', uid = user1.id)}}">Click</a> here to see information about your own products
 {% endif %}
 
-<a href="{{ url_for('index.add_product', sid = user1.id)}}" type="button" class="btn btn-light">Add  Product</a>
-<a href="{{ url_for('index.delete_product', sid = user1.id)}}" type="button" class="btn btn-light">Delete Product</a>
 <!--sid = user1.id)-->
 <br><br>
 <h2>Your recent purchases:</h2>
