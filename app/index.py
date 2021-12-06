@@ -3,7 +3,7 @@ from flask_login import current_user
 from flask import request
 import datetime
 from flask_wtf import FlaskForm
-from wtforms import StringField, PasswordField, IntegerField, FloatField, SubmitField, SelectField, BooleanField
+from wtforms import StringField, PasswordField, IntegerField, FloatField, SubmitField, SelectField, BooleanField, DecimalField
 from wtforms.validators import DataRequired, InputRequired
 from flask_babel import _, lazy_gettext as _l
 
@@ -17,6 +17,9 @@ from flask import Blueprint
 bp = Blueprint('index', __name__)
 
 categs = ""
+
+#help
+#this is to see merge request
 
 @bp.route('/')
 def index():
@@ -94,10 +97,40 @@ def customer():
     #if Seller.get(current_user.id) != None:
         #seller1 = 1
     seller1 = Product.get_seller_info(current_user.id)
+    isSeller = Seller.get(current_user.id)
+    if isSeller == None:
+        seller1 = None
+    
     return render_template('customer.html',
                            purchase_history=purchases,
                            user1 = user_info,
                            seller = seller1)
+
+
+@bp.route('/seller_page/<uid>')
+def seller_page(uid):
+    #print(sid)
+    if current_user.is_authenticated:
+        purchases = Purchase.get_all_by_uid_since(
+            current_user.id, datetime.datetime(1980, 9, 14, 0, 0, 0))
+        user_info = User.get(current_user.id)
+    purchases1 = Purchase.get_seller(current_user.id)
+    #print(purchases1)
+    #print(purchases1.buyer_id)
+    users = Purchase.get_users(current_user.id)
+    seller1 = Product.get_seller_info(current_user.id)
+    #print(users)
+    u = []
+    for user in users:
+        u.append(User.get_users(user))
+    #print(user_info)
+    #print(u[0][0][3])
+    return render_template('seller_page.html',
+                            user1 = user_info,
+                            seller = seller1,
+                            purchases = purchases1,
+                            user_info = u)
+
 
 @bp.route('/product/<pid>')
 def product(pid):
@@ -122,24 +155,8 @@ def cartview():
         cart = Cart.get_cart_uid(current_user.id)
     return render_template('cart.html',
                            cart_things = cart,
-                           total_price = Cart.get_total_price(current_user.id))
-
-
-@bp.route('/checkout')
-def checkout():
-    if current_user.is_authenticated:
-        their_purchase = Cart.get_cart_uid(current_user.id)
-        quantities_good = Cart.check_quantities(current_user.id)
-        #balance_good = Cart.check_balance(current_user.id)
-        if quantities_good: #and balance_good
-            Purchase.add_purchases(current_user.id, their_purchase)
-            Purchase.decrement_stock(their_purchase)
-            Cart.clear(current_user.id)
-        elif quantities_good == False:
-            message = "The inventory of one or more products was updated to be smaller than its quantity in your cart. Please update this quantity."
-            return render_template('quantity_error.html', error = message)
-
-    return render_template('checkout.html')
+                           total_price = Cart.get_total_price(current_user.id),
+                           balance = User.get_balance(current_user.id)[0][0])
 
 @bp.route('/remove/<pid>/<sid>')
 def remove(pid,sid):
@@ -160,7 +177,7 @@ class AddForm(FlaskForm):
     description = StringField(_l('Description'), validators=[DataRequired()])
     category = StringField(_l('Category'), validators=[DataRequired()])
     inventory = IntegerField(_l('Inventory'), validators=[DataRequired()])
-    price = FloatField(_l('price'), validators=[DataRequired()])
+    price = DecimalField(_l('price'), validators=[DataRequired()])
     #coupon_code = StringField(_l('Coupon Code'), validators=[DataRequired()])
     submit = SubmitField(_l('Add'))
 
@@ -221,7 +238,7 @@ def update_inventory(sid, pid):
 
 
 class PriceForm(FlaskForm):
-    price = FloatField(_l('price'), validators=[DataRequired()])
+    price = DecimalField(_l('price'), validators=[DataRequired()])
     submit = SubmitField(_l('Update'))
 
 @bp.route('/edit_price/<pid>', methods=['GET', 'POST'])
@@ -266,6 +283,32 @@ def edit_quantity(pid, sid):
             return render_template('quantity_error.html', error = message)
 
     return render_template('edit_quantity.html', title = 'Update Quantity', form = form, stock = inv)
+
+
+@bp.route('/checkout')
+def checkout():
+    if current_user.is_authenticated:
+        their_purchase = Cart.get_cart_uid(current_user.id)
+        quantities_good = Cart.check_quantities(current_user.id)
+        their_balance = User.get_balance(current_user.id)[0][0]
+        total_price = Cart.get_total_price(current_user.id)
+        save = 0 + total_price
+        balance_good = Cart.check_balance(their_balance, save)
+        if quantities_good and balance_good:
+            Purchase.add_purchases(current_user.id, their_purchase)
+            Purchase.decrement_stock(their_purchase)
+            Purchase.update_user_balance(current_user.id, their_balance, save)
+            #Purchase.update_seller_balances(their_purchase)
+            Purchase.make_unavailable()
+            Cart.clear(current_user.id)
+        elif quantities_good == False:
+            message = "The inventory of one or more products was updated to be smaller than its quantity in your cart. Please update this quantity."
+            return render_template('quantity_error.html', error = message)
+        elif balance_good == False:
+            message = "You don't have enough money to buy that. Have you considered getting a job?"
+            return render_template('balance_error.html', error = message, user_id = current_user.id)
+
+    return render_template('checkout.html', total = save, old_balance = their_balance, new_balance = User.get_balance(current_user.id)[0][0])
 
 # class AvailForm(FlaskForm):
 #     available = StringField(_l('available'), validators=[DataRequired()])

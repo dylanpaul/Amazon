@@ -74,3 +74,59 @@ WHERE seller_id = :sell_id AND id = :prod_id
             except:
                 print("error")
         return
+
+    @staticmethod
+    def get_seller(seller_id):
+        rows = app.db.execute('''
+SELECT id, product_id, seller_ID_2, buyer_id, time_purchased, quantity, fulfilled_status
+FROM Purchases
+WHERE seller_ID_2 = :seller_id
+ORDER BY time_purchased DESC
+''',
+                              seller_id=seller_id)
+        return [row for row in rows]
+        #return Purchase(*(rows[0])) if rows else None
+
+
+    @staticmethod
+    def get_users(seller_id):
+        rows = app.db.execute('''
+SELECT buyer_id
+FROM Purchases
+WHERE seller_ID_2 = :seller_id
+ORDER BY time_purchased DESC
+''',
+                                seller_id=seller_id)
+        return [row[0] for row in rows]
+
+
+    @staticmethod
+    def make_unavailable():
+        print("test____________")
+        try:
+            app.db.execute("""
+UPDATE Products
+SET available = :f
+WHERE inventory = :zero
+""",            
+                                f = False,
+                                zero = 0)
+        except:
+            print("error")
+        print("end of try")
+        return
+
+
+    @staticmethod
+    def update_user_balance(uid, balance, cost):
+        try:
+                app.db.execute("""
+UPDATE Users
+SET balance = :new_val
+WHERE id = :user_id
+""",            
+                                new_val = (balance - cost),
+                                user_id = uid)
+        except:
+                print("error")
+        return

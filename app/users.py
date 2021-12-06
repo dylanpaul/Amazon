@@ -1,8 +1,9 @@
 from flask import render_template, redirect, url_for, flash, request
 from werkzeug.urls import url_parse
+from app.models.seller import Seller
 from flask_login import login_user, logout_user, current_user
 from flask_wtf import FlaskForm
-from wtforms import StringField, PasswordField, BooleanField, SubmitField
+from wtforms import StringField, PasswordField, BooleanField, SubmitField, FloatField, DecimalField
 from wtforms.validators import ValidationError, DataRequired, Email, EqualTo
 from flask_babel import _, lazy_gettext as _l
 
@@ -42,11 +43,13 @@ def login():
 class RegistrationForm(FlaskForm):
     firstname = StringField(_l('First Name'), validators=[DataRequired()])
     lastname = StringField(_l('Last Name'), validators=[DataRequired()])
+    address = StringField(_l('Address'), validators=[DataRequired()])
     email = StringField(_l('Email'), validators=[DataRequired(), Email()])
     password = PasswordField(_l('Password'), validators=[DataRequired()])
     password2 = PasswordField(
         _l('Repeat Password'), validators=[DataRequired(),
                                            EqualTo('password')])
+    seller = StringField(_l('Seller'), validators=[DataRequired()])                                    
     submit = SubmitField(_l('Register'))
 
     def validate_email(self, email):
@@ -57,18 +60,22 @@ class RegistrationForm(FlaskForm):
 @bp.route('/register', methods=['GET', 'POST'])
 def register():
     if current_user.is_authenticated:
-        print("here1")
         return redirect(url_for('index.index'))
-        print("here2")
     form = RegistrationForm()
     if form.validate_on_submit():
-        print("here3")
-        if User.register(form.email.data,
+        #print(form.email.data, form.password.data, form.firstname.data, form.lastname.data
+
+        id1 = User.get_all() + 1
+
+        if User.register(id1,
+                         form.email.data,
+                         form.address.data,
                          form.password.data,
                          form.firstname.data,
                          form.lastname.data):
             flash('Congratulations, you are now a registered user!')
-            print("here4")
+            if form.seller.data.lower() == 'y' or form.seller.data.lower() == 'yes':
+                Seller.register(id1)
             return redirect(url_for('users.login'))
     return render_template('register.html', title='Register', form=form)
 
@@ -115,3 +122,59 @@ def edit_email(uid):
         return redirect(url_for('index.customer'))
     return render_template('edit_email.html', title = 'Update Email', form = form)
                            #eller = sell)
+
+
+class BalanceForm(FlaskForm):
+    balance = DecimalField(_l('balance'), validators=[DataRequired()])
+    submit = SubmitField(_l('Withdraw'))
+
+@bp.route('/edit_balance/<uid>', methods=['GET', 'POST'])
+def withdraw_balance(uid):
+    form = BalanceForm()
+    amount = User.get_balance(uid)[0][0]
+    if form.validate_on_submit():
+        if  form.balance.data <= amount and form.balance.data > 0:
+            User.update_balance(uid, amount - form.balance.data)
+            return redirect(url_for('index.customer'))
+        elif form.balance.data > amount:
+            message = "Withdrawing more than you have"
+            return render_template('balance_withdraw_error.html', error = message)
+        else:
+            message = "Invalid quantity value"
+            return render_template('balance_withdraw_error.html', error = message)
+    return render_template('withdraw_balance.html', title = 'Add or Withdraw from Balance', form = form, balance = amount)
+
+
+class BalanceForm1(FlaskForm):
+    balance = DecimalField(_l('balance'), validators=[DataRequired()])
+    submit = SubmitField(_l('Add'))
+
+@bp.route('/add_balance/<uid>', methods=['GET', 'POST'])
+def add_balance(uid):
+    form = BalanceForm1()
+    amount = User.get_balance(uid)[0][0]
+    if form.validate_on_submit():
+        if  form.balance.data > 0:
+            User.add_balance(uid, amount + form.balance.data)
+            return redirect(url_for('index.customer'))
+        elif form.balance.data > amount:
+            message = "Adding negative amount!"
+            return render_template('balance_withdraw_error.html', error = message)
+        else:
+            message = "Invalid quantity value"
+            return render_template('balance_withdraw_error.html', error = message)
+    return render_template('add_balance.html', title = 'Add or Withdraw from Balance', form = form, balance = amount)
+
+
+class AddyForm(FlaskForm):
+    address = StringField(_l('Address'), validators=[DataRequired()])
+    submit = SubmitField(_l('Update'))
+
+@bp.route('/edit_addy/<uid>', methods=['GET', 'POST'])
+def edit_addy(uid):
+    form = AddyForm()
+    if form.validate_on_submit():
+        User.update_address(uid, form.address.data)
+        return redirect(url_for('index.customer'))
+    return render_template('edit_address.html', title = 'Update Address', form = form)
+                          

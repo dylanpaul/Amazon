@@ -6,17 +6,18 @@ from .. import login
 
 
 class User(UserMixin):
-    def __init__(self, id, email, firstname, lastname):
+    def __init__(self, id, email, addy, firstname, lastname, balance):
         self.id = id
         self.email = email
+        self.addy = addy
         self.firstname = firstname
         self.lastname = lastname
-        #self.balance = balance
+        self.balance = balance
 
     @staticmethod
     def get_by_auth(email, password):
         rows = app.db.execute("""
-SELECT password, id, email, firstname, lastname
+SELECT password, id, email, addy, firstname, lastname, balance
 FROM Users
 WHERE email = :email
 """,
@@ -40,22 +41,23 @@ WHERE email = :email
         return len(rows) > 0
 
     @staticmethod
-    def register(email, password, firstname, lastname):
-        print("urg")
+    def register(id1, email, addy, password, firstname, lastname):
         try:
+            #print(email)
             rows = app.db.execute("""
-INSERT INTO Users(email, password, firstname, lastname)
-VALUES(:email, :password, :firstname, :lastname)
+INSERT INTO Users(id, email, addy, password, firstname, lastname, balance)
+VALUES(:id, :email, :addy, :password, :firstname, :lastname, 0)
 RETURNING id
 """,
                                   email=email,
+                                  addy = addy,
                                   password=generate_password_hash(password),
                                   firstname=firstname,
-                                  lastname=lastname)
+                                  lastname=lastname,
+                                  id = id1)
             id = rows[0][0]
-            print("got here")
             return User.get(id)
-        except Exception:
+        except Exception as e:
             # likely email already in use; better error checking and
             # reporting needed
             return None
@@ -64,7 +66,7 @@ RETURNING id
     @login.user_loader
     def get(id):
         rows = app.db.execute("""
-SELECT id, email, firstname, lastname
+SELECT id, email, addy, firstname, lastname, balance
 FROM Users
 WHERE id = :id
 """,
@@ -112,3 +114,75 @@ WHERE id = :uid
         except:
             print("error")
         return
+
+    @staticmethod
+    def update_address(uid, address):
+        try:
+            app.db.execute("""
+UPDATE Users
+SET addy = :address 
+WHERE id = :uid
+""",
+                             uid = uid,
+                             address = address)
+        except:
+            print("error")
+        return
+
+    @staticmethod
+    def update_balance(uid, balance1):
+        try:
+            app.db.execute("""
+UPDATE Users
+SET balance = :balance1 
+WHERE id = :uid
+""",
+                             uid = uid,
+                             balance1 = balance1)
+        except:
+            print("error")
+        return
+
+    @staticmethod
+    def add_balance(uid, balance1):
+        try:
+            app.db.execute("""
+UPDATE Users
+SET balance = :balance1 
+WHERE id = :uid
+""",
+                             uid = uid,
+                             balance1 = balance1)
+        except:
+            print("error")
+        return
+
+
+    @staticmethod
+    def get_balance(id):
+        rows = app.db.execute("""
+SELECT balance
+FROM Users
+WHERE id = :id
+""",
+                              id=id)
+        return rows
+
+    @staticmethod
+    def get_all():
+        rows = app.db.execute("""
+SELECT COUNT(*)
+FROM Users
+""",
+                              )
+        return rows[0][0]
+
+    @staticmethod
+    def get_users(id2):
+        rows = app.db.execute("""
+SELECT id, email, addy, firstname, lastname, balance
+FROM Users
+WHERE id = :id
+""",
+                                id=id2)
+        return rows

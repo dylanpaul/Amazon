@@ -1,9 +1,15 @@
-"0","test@gmail.com","hi","pbkdf2:sha256:260000$vjkcycAXBGltAKS0$6ddf20a0edd68443661dd21d91411e0cd0759a747da79558a8be56dd41d77d81","Joey","Shmoey","52.34"
-"1","tac69@duke.edu","hi","pbkdf2:sha256:260000$lC0F3PHrCjIZGfl1$0d360402095d987cb1d1cb808bdc818a706073d0169a37e1598b0b59cca3a213","Thomas","Colicchio","11.21"
-"2","dhp14@duke.edu","hi","pbkdf2:sha256:260000$SPB1LElPaezTH5sF$076155399da67b4c7c5541520403e4746ee2f4788ddaad9bcce268eb99bdd930","Dylan","Paul","99.85"
-"3","cg@duke.edu","hi","pbkdf2:sha256:260000$BuQVTPfXDS0OFW4z$0c5c0b5bfbe27cddb6a23b4d5791bba2c9db3abff301e93c1204e81de9b5534d","Christian","Garvin","96.24"
-"4","ig@duke.edu","hi","pbkdf2:sha256:260000$yqA6HqBaNz8mhp4I$2d36d24aa75db55e48b5a61cb2888f4d7c11792e380e1f8f332565a59abcd5d3","Isabella","Geraci","15.21"
-"5","am@duke.edu","hi","pbkdf2:sha256:260000$YtqVAixGyvQQne4R$2057414c37fb06ebe54f548f3b2038c1e1f94930bf609707cb229c50b0d89322","Alex","Medow","10.12"
+"0","tamaramorrison@hotmail.com","9342 Lori Bypass Suite 711
+East Sandra, CO 92162","pbkdf2:sha256:260000$vfbRRDkcNR9hiQ5U$3837f00dcbc25acad45e21e962caefa9fcae64fef5162dd2b3e675c00d05e85e","Gary","Cross","69.87"
+"1","carlsonholly@yahoo.com","230 Megan Junctions Suite 197
+North Thomas, OK 67164","pbkdf2:sha256:260000$Ud0WvCtYW8A7gZD9$00d0056a139a83a717929afd5d16dc544e7d6c990deb1af94768b03397fdf113","Tracy","Robbins","39.83"
+"2","bairdemma@hotmail.com","4217 Burton Brooks
+Robinville, KS 17988","pbkdf2:sha256:260000$j3TzTtvPzOVimsD9$a66468fdd115155935fb394304699e1d3261d6f92bcc8e6b779af87976befc7d","Anthony","Carson","83.66"
+"3","zsmith@hotmail.com","361 Robinson Green Apt. 635
+North Lynntown, NC 59694","pbkdf2:sha256:260000$8sK3P3ZZKOHsLmW9$7d846937b37a4c6252d2bc6226baa63120f832e98b4814fa7320c2de95ece031","Sara","Evans","96.86"
+"4","berryerika@hotmail.com","634 Petersen Orchard
+Lawsonbury, AK 86613","pbkdf2:sha256:260000$3q86pCkugFjAU80u$4bc44f653ca7812c19e541a6b365f127f70af76cac1ab385568cad513c870bc6","Charles","Scott","0.94"
+"5","debra94@gmail.com","306 Watson Field
+Kellyland, AZ 64223","pbkdf2:sha256:260000$lp0l8cYTQvH92x2W$ade5628591922d985222f3b40856ff3619e2d484d27ef009f373abb4909797bb","John","Ellis","32.03"
 "6","eric22@gmail.com","45602 Phillip Squares
 East Robertside, WA 19150","pbkdf2:sha256:260000$P8XkouuYwN7F2aZP$937288ef55217adc2362d099c5a9ffac75efa20c5f0e963705b2bb683d69b2a7","Melissa","Cantu","75.54"
 "7","bramirez@gmail.com","46896 Garcia Glen
@@ -1052,7 +1058,7 @@ Port Claudia, RI 25238","pbkdf2:sha256:260000$D9HYQzx8rKryciA9$a2d7a406e477aa3e7
 Guzmanmouth, IA 17629","pbkdf2:sha256:260000$3T3XgfgshgkGhaqU$f1b3476ac2ec29903a1f441887d3cbdeefb87c9fa9ef7ae14a5b5a3942f1c5b7","Chad","Boyd","69.65"
 "529","tsullivan@gmail.com","19071 Davis Club
 Gutierrezland, OH 49340","pbkdf2:sha256:260000$jNyACeqvP3doaTW4$10863d1151ebaab9811c56e73491449d83d51d105ce1bf310b39cca875e06940","Melanie","Simpson","94.54"
-"530","zrobertson1@gmail.com","9618 Contreras Drive
+"530","zrobertson@gmail.com","9618 Contreras Drive
 Lake Theresa, ME 15512","pbkdf2:sha256:260000$NooSmHVOBkliuIgy$63ab46c755922e5477fc7effe0b5406f0aee940f4cff1b4387c09fc39f962f8e","Elizabeth","Chung","70.88"
 "531","bsimon@hotmail.com","80538 Tiffany Fields
 Weissfurt, PA 28099","pbkdf2:sha256:260000$ZmSOUxfvSC8vj1JR$805ca45b7696319d72932b95c93fbaba85a0dac88c7d066797f8e60c7d5805df","Valerie","Wright","75.64"

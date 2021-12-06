@@ -1,0 +1,11 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<h1>Balance Too Low</h1>
+<br><br>
+{{error}}
+<br><br>
+<a class="btn btn-secondary" href="{{ url_for('users.add_balance', uid = user_id)}}" role="button">Change Balance</a></td>
+<a class="btn btn-secondary" href="{{ url_for('index.cartview')}}" role="button">Return to Cart</a></td>
+{% endblock %}
