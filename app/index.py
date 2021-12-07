@@ -234,6 +234,7 @@ class AddForm(FlaskForm):
     name = StringField(_l('Name'), validators=[DataRequired()])
     description = StringField(_l('Description'), validators=[DataRequired()])
     category = StringField(_l('Category'), validators=[DataRequired()])
+    image = StringField(_l('Image_Url'), validators=[DataRequired()])
     inventory = IntegerField(_l('Inventory'), validators=[DataRequired()])
     price = DecimalField(_l('price'), validators=[DataRequired()])
     submit = SubmitField(_l('Add'))
@@ -246,7 +247,7 @@ def add_product(sid):
     print(id1)
     if form.validate_on_submit():
         Product.add_product(id1, form.name.data, sid, form.description.data, form.category.data, 
-        form.inventory.data, True, form.price.data)
+        form.inventory.data, True, form.price.data, form.image.data)
         print(Product)
         return redirect(url_for('index.seller_page', uid = sid))
     return render_template('add_product.html', title = 'Add Product', form = form)
@@ -348,7 +349,8 @@ def checkout():
         save = 0 + total_price
         balance_good = Cart.check_balance(their_balance, save)
         if quantities_good and balance_good:
-            Purchase.add_purchases(current_user.id, their_purchase)
+            id = Purchase.get_size() + 2
+            Purchase.add_purchases(id, current_user.id, their_purchase)
             Purchase.decrement_stock(their_purchase)
             Purchase.update_user_balance(current_user.id, their_balance, save)
             Purchase.update_seller_balances(their_purchase)

@@ -55,11 +55,12 @@ def gen_products(num_products):
             category = fake.color_name() #using this as category generator for now
             inventory = f'{str(fake.random_int(max=100))}' #max amount of inventory 100 for now
             available = fake.random_element(elements=('true', 'false'))
+            image = fake.image_url()
             if available == 'true':
                 temp.append(pid)
                 temp.append(seller_id)
                 available_pids.append(temp)
-            writer.writerow([pid, name, seller_id, description, category, inventory, available, price])
+            writer.writerow([pid, name, seller_id, description, category, inventory, available, price, image])
         print(f'{num_products} generated; {len(available_pids)} available')
     return available_pids
 

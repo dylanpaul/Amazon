@@ -2,7 +2,7 @@ from flask import current_app as app
 
 
 class Product:
-    def __init__(self, id, name, seller_id, description, category, inventory, available, price):
+    def __init__(self, id, name, seller_id, description, category, inventory, available, price, image):
         #self.id = id
         self.id = id
         self.name = name
@@ -12,11 +12,12 @@ class Product:
         self.inventory = inventory
         self.available = available
         self.price = price
+        self.image = image
 
     @staticmethod
     def get(id):
         rows = app.db.execute('''
-SELECT p.id, p.name, p.seller_id, p.description, p.category, p.inventory, p.available, p.price, u.firstname, u.lastname
+SELECT p.id, p.name, p.seller_id, p.description, p.category, p.inventory, p.available, p.price, p.image, u.firstname, u.lastname
 FROM Products as p, Users as u
 WHERE p.id = :id
 AND p.seller_id = u.id
@@ -29,7 +30,7 @@ AND p.seller_id = u.id
     @staticmethod
     def get_all(available=True):
         rows = app.db.execute('''
-SELECT id, name, seller_id, description, category, inventory, available, price
+SELECT id, name, seller_id, description, category, inventory, available, price, image
 FROM Products
 WHERE available = :available
 ''',
@@ -39,7 +40,7 @@ WHERE available = :available
     @staticmethod
     def get_seller_info(sid):
         rows = app.db.execute('''
-SELECT p.id, p.name, p.seller_id, p.inventory, p.available, p.price, u.firstname, u.lastname
+SELECT p.id, p.name, p.seller_id, p.inventory, p.available, p.price, p.image, u.firstname, u.lastname
 FROM Products as p, Users as u
 WHERE p.seller_id = :sid
 AND u.id = p.seller_id
@@ -49,12 +50,12 @@ AND u.id = p.seller_id
         #return [Product(*row) for row in rows] if rows is not None else None
 
     @staticmethod
-    def add_product(id, name, sid, description, category, inventory, available, price):
+    def add_product(id, name, sid, description, category, inventory, available, price, image):
         #try:
         
         rows = app.db.execute("""
-INSERT INTO Products(id, name, seller_id, description, category, inventory, available, price)
-VALUES(:id1, :name, :seller_id, :description, :category, :inventory, :available, :price)
+INSERT INTO Products(id, name, seller_id, description, category, inventory, available, price, image)
+VALUES(:id1, :name, :seller_id, :description, :category, :inventory, :available, :price, :image)
 RETURNING id
 """,
                                 
@@ -66,6 +67,7 @@ RETURNING id
                                 inventory = inventory,
                                 available = available,
                                 price = price,
+                                image = image
                                 )
                                     
             #except:
@@ -161,7 +163,7 @@ GROUP BY category
     @staticmethod
     def get_cat(category):
         rows = app.db.execute('''
-SELECT id, name, seller_id, description, category, inventory, available, price
+SELECT id, name, seller_id, description, category, inventory, available, price, image
 FROM Products
 WHERE category = :category
 AND available = :av
@@ -173,7 +175,7 @@ AND available = :av
     @staticmethod
     def get_price_low():
         rows = app.db.execute('''
-SELECT id, name, seller_id, description, category, inventory, available, price
+SELECT id, name, seller_id, description, category, inventory, available, price, image
 FROM Products
 WHERE available = :av
 ORDER BY price
@@ -184,7 +186,7 @@ ORDER BY price
     @staticmethod
     def get_price_high():
         rows = app.db.execute('''
-SELECT id, name, seller_id, description, category, inventory, available, price
+SELECT id, name, seller_id, description, category, inventory, available, price, image
 FROM Products
 WHERE available = :av
 ORDER BY price DESC
@@ -227,7 +229,7 @@ WHERE id = :pid
     @staticmethod
     def get_shared(name):
        rows = app.db.execute('''
-SELECT p.id, p.name, p.seller_id, p.description, p.category, p.inventory, p.available, p.price, u.firstname, u.lastname
+SELECT p.id, p.name, p.seller_id, p.description, p.category, p.inventory, p.available, p.price, p.image, u.firstname, u.lastname
 FROM Products as p, Users as u
 WHERE p.name = :n
 AND p.seller_id = u.id
@@ -241,7 +243,7 @@ AND p.seller_id = u.id
         search1 = search + "%"
         search2 = "%" + search + "%"
         rows = app.db.execute('''
-SELECT id, name, seller_id, description, category, inventory, available, price
+SELECT id, name, seller_id, description, category, inventory, available, price, image
 FROM Products
 WHERE name LIKE :search1
 OR name LIKE :search2

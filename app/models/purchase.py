@@ -37,15 +37,16 @@ ORDER BY time_purchased DESC
         #return [Purchase(*row) for row in rows]
     
     @staticmethod
-    def add_purchases(u_id, their_purchases):
+    def add_purchases(id, u_id, their_purchases):
         for prod in their_purchases:
             try:
                 rows = app.db.execute("""
-INSERT INTO Purchases(product_id, seller_ID_2, buyer_id, time_purchased, quantity, fulfilled_status)
-VALUES(:pid, :sid, :user_id, current_timestamp, :quantity, 'TRUE')
+INSERT INTO Purchases(id, product_id, seller_ID_2, buyer_id, time_purchased, quantity, fulfilled_status)
+VALUES(:id, :pid, :sid, :user_id, current_timestamp, :quantity, 'TRUE')
 RETURNING id
 """,
                                 #oid = id, #what to do about order id?
+                                id = id,
                                 user_id = u_id,
                                 #date = datetime.now(), #current_timestamp, #'9/10/21 13:12', #how to make a current time stamp?
                                 pid = prod.product_id, 
@@ -175,3 +176,12 @@ WHERE id = :pid
         except:
                 print("error")
         return
+
+    @staticmethod
+    def get_size():
+        rows = app.db.execute("""
+SELECT COUNT(*)
+FROM Purchases
+""",
+                              )
+        return rows[0][0]

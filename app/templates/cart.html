@@ -11,6 +11,7 @@
       <th scope="col">Product Name</th>
       <th scope="col">Seller Name</th>
       <th scope="col">Unit Price</th>
+      <th scope="col">Image</th>
       <th scope="col">Quantity</th>
       <th scope="col">Current Stock</th>
       <th scope="col"></th>
@@ -22,6 +23,8 @@
         <th scope="row">{{thing.name}}</th>
         <td>{{thing.firstname + " " + thing.lastname}}</td>
         <td>{{thing.price}}</td>
+        <td><img src = "{{thing.image}}" alt = "product image" width = "50" height = "50"></td>
+        <!--<td><img src = "https://placekitten.com/621/976" alt = "product image" width = "50" height = "50"></td>*/-->
         <td>{{thing.quantity}}</td>
         <td>{{thing.inventory}}</td>
         <td><a href="{{ url_for('index.edit_quantity', pid = thing.product_id, sid = thing.seller_id)}}" type="button" class="btn btn-light">Change Quantity</a>
