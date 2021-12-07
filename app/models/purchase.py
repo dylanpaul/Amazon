@@ -185,3 +185,15 @@ FROM Purchases
 """,
                               )
         return rows[0][0]
+    
+    @staticmethod
+    def get_order(oid):
+        rows = app.db.execute('''
+SELECT prod.name, pur.product_id, u.id, u.firstname, u.lastname, pur.time_purchased, prod.price, pur.quantity, pur.fulfilled_status
+FROM Purchases as pur, Users as u, Products as prod
+WHERE pur.id = :purid
+AND pur.product_id = prod.id
+AND u.id = pur.seller_ID_2
+''',
+                            purid = oid)
+        return rows

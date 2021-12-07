@@ -47,7 +47,7 @@
   <tbody>
     {% for purchase in purchase_history%}
       <tr>
-        <th scope="row">{{purchase.id}}</th>
+        <th scope="row"> <a href="{{ url_for('index.order_page', oid = purchase.id)}}">{{purchase.id}}</a> </th>
         <td>{{purchase.name}}</td>
         <td>{{purchase.time_purchased}}</td>
       </tr>
