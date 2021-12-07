@@ -234,7 +234,7 @@ class AddForm(FlaskForm):
     name = StringField(_l('Name'), validators=[DataRequired()])
     description = StringField(_l('Description'), validators=[DataRequired()])
     category = StringField(_l('Category'), validators=[DataRequired()])
-    image = StringField(_l('Image_Url'), validators=[DataRequired()])
+    image = StringField(_l('Image_Url'), validators=[])
     inventory = IntegerField(_l('Inventory'), validators=[DataRequired()])
     price = DecimalField(_l('price'), validators=[DataRequired()])
     submit = SubmitField(_l('Add'))

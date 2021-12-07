@@ -23,7 +23,7 @@ category VARCHAR(256),
 inventory  INT NOT NULL,
 available BOOLEAN NOT NULL, 
 price DECIMAL(10, 2) NOT NULL,
-image VARCHAR(256) NOT NULL,
+image VARCHAR(256),
 PRIMARY KEY (id, seller_id)
 );
 
