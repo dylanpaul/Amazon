@@ -234,16 +234,17 @@ WHERE id = :seller_id
         return
 
     @staticmethod
-    def edit_fufil(pid):
-        print(pid)
+    def edit_fufil(pid, sid):
         try:
             rows = app.db.execute('''
 UPDATE Purchases
 SET fulfilled_status = :val
 WHERE id = :pid
+AND seller_ID_2 = :sid
 ''',
                                val = 'TRUE',
-                               pid=pid)
+                               pid=pid,
+                               sid = sid)
         except:
                 print("error")
         return
@@ -268,3 +269,23 @@ AND u.id = pur.seller_ID_2
 ''',
                             purid = oid)
         return rows
+
+
+
+    @staticmethod
+    def get_fulfill(id1):
+        status = True
+        try:
+           check = app.db.execute("""
+SELECT *
+FROM Purchases 
+WHERE id = :id 
+AND fulfilled_status = :stat
+""",
+                                stat = False,
+                                id = id1)
+        except:
+            print("error")
+        if(len(check) > 0):
+            status = False
+        return status

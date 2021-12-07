@@ -82,7 +82,6 @@ def search_bar():
     else:
         products = Product.get_all()
     #     return redirect(url_for('index.customer'))
-    print(products)
     return render_template('search_bar.html', 
                             form = form,
                             avail_products=products,
@@ -95,7 +94,7 @@ def search_bar():
 def edit_fulfilled(pid, status, uid):
     if (status == "False"):
         print("here")
-        Purchase.edit_fufil(pid)
+        Purchase.edit_fufil(pid, uid)
     return redirect(url_for('index.seller_page', uid = uid))
 
 # @bp.route('/delete_product/<sid>')
@@ -124,20 +123,25 @@ def customer():
             #current_user.id, datetime.datetime(1980, 9, 14, 0, 0, 0))
         ids = Purchase.get_time(current_user.id, datetime.datetime(1980, 9, 14, 0, 0, 0))
         ids2 = []
-        print(ids[0][0])
         for id in ids:
-            print(id)
             if id[0] not in ids2:
                 ids2.append(id[0])
-        print(ids2)
         purchases = Purchase.get_order_by_uid_since(ids2, current_user.id)
+        
+        
+        fufil = []
+        for id in ids2:
+            fufil.append(Purchase.get_fulfill(id))
+
+        print(fufil)
+        #fufil = Purchase.get_fulfill(ids2)
+        #print(fufil)
         # pur_ordered = []
         # for ord in purchases:
         #     id_find = ids2
         #     if purchase[0] == id_find
         #     pur_ordered.append(purchase if purchase[0] == id_find)
         user_info = User.get(current_user.id)
-    print(purchases)
     #seller1 = 0
     #if Seller.get(current_user.id) != None:
         #seller1 = 1
@@ -149,7 +153,8 @@ def customer():
     return render_template('customer.html',
                            purchase_history=purchases,
                            user1 = user_info,
-                           seller = seller1)
+                           seller = seller1,
+                           fulfill = fufil)
 
 
 @bp.route('/seller_page/<uid>')
@@ -160,7 +165,6 @@ def seller_page(uid):
         #     current_user.id, datetime.datetime(1980, 9, 14, 0, 0, 0))
         user_info = User.get(current_user.id)
     purchases1 = Purchase.get_seller_products(current_user.id)
-    print(purchases1)
     #print(purchases1.buyer_id)
     users = Purchase.get_users(current_user.id)
     seller1 = Product.get_seller_info(current_user.id)
@@ -207,7 +211,6 @@ def cart(pid,sid, quant):
         if int(quant) <= inv and int(quant) > 0:
             Cart.add(int(pid),int(sid),current_user.id, int(quant))
         elif int(quant) > inv:
-            print(pid)
             message = "Not enough of this product in stock for the quantity entered. Not added to cart"
             return render_template('quantity_error.html', pid1 = pid, error = message)
         elif int(quant) <= 0:
@@ -262,11 +265,9 @@ class AddForm(FlaskForm):
 def add_product(sid):
     form = AddForm()
     id1 = Product.get_count() + 2
-    print(id1)
     if form.validate_on_submit():
         Product.add_product(id1, form.name.data, sid, form.description.data, form.category.data, 
         form.inventory.data, True, form.price.data, form.image.data)
-        print(Product)
         return redirect(url_for('index.seller_page', uid = sid))
     return render_template('add_product.html', title = 'Add Product', form = form)
                            #eller = sell)
@@ -298,10 +299,10 @@ def update_inventory(sid, pid):
     if form.validate_on_submit():
         inv = form.inventory.data
         if(inv != 0):
-            print(sid, pid, inv) #techincally dont need seller_id, did incase out pid isnt working correctly
+            #print(sid, pid, inv) #techincally dont need seller_id, did incase out pid isnt working correctly
             Product.update_inventory(sid, pid, inv)
         else:
-            print(sid, pid, inv) 
+            #print(sid, pid, inv) 
             Product.delete_pid(pid)
         return redirect(url_for('index.customer'))
     return render_template('update_inventory.html', title = 'Update Inventory', form = form)

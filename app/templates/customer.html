@@ -42,14 +42,16 @@
       <th scope="col">Purchase ID</th>
       <th scope="col">Number of Items</th>
       <th scope="col">Order Total</th>
+      <th scope="col">Fulfillment Status</th>
     </tr>
   </thead>
   <tbody>
-    {% for purchase in purchase_history%}
+    {% for i in range(purchase_history|length)%}
       <tr>
-        <th scope="row"> <a href="{{ url_for('index.order_page', oid = purchase.id)}}">{{purchase.id}}</a> </th>
-        <td>{{purchase.c}}</td>
-        <td>{{purchase.total}}</td>
+        <th scope="row"> <a href="{{ url_for('index.order_page', oid = purchase_history[i].id)}}">{{purchase_history[i].id}}</a> </th>
+        <td>{{purchase_history[i].c}}</td>
+        <td>{{purchase_history[i].total}}</td>
+        <td>{{fulfill[i]}}</td>
       </tr>
     {% endfor %}
   </tbody>
