@@ -40,16 +40,16 @@
   <thead class="thead-dark">
     <tr>
       <th scope="col">Purchase ID</th>
-      <th scope="col">Product Name</th>
-      <th scope="col">Order Date</th>
+      <th scope="col">Number of Items</th>
+      <th scope="col">Order Total</th>
     </tr>
   </thead>
   <tbody>
     {% for purchase in purchase_history%}
       <tr>
         <th scope="row"> <a href="{{ url_for('index.order_page', oid = purchase.id)}}">{{purchase.id}}</a> </th>
-        <td>{{purchase.name}}</td>
-        <td>{{purchase.time_purchased}}</td>
+        <td>{{purchase.c}}</td>
+        <td>{{purchase.total}}</td>
       </tr>
     {% endfor %}
   </tbody>

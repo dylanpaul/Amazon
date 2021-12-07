@@ -2,6 +2,7 @@
 
 {% block content %}
 {% if seller != None %}
+<br><br>
 <h2>Your Products:</h2>
 <table class='table table-hover table-bordered container'>
   <thead class="thead-dark">
@@ -29,7 +30,7 @@
 <a href="{{ url_for('index.add_product', sid = user1.id)}}" type="button" class="btn btn-light">Add  Product</a>
 <a href="{{ url_for('index.delete_product', sid = user1.id)}}" type="button" class="btn btn-light">Delete Product</a>
 
-
+<br><br>
 <h1>     </h1>
 <h2>Your Orders:</h2>
 <table class='table table-hover table-bordered container'>

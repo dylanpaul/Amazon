@@ -116,9 +116,28 @@ def edit_fulfilled(pid, status, uid):
 @bp.route('/customer')
 def customer():
     if current_user.is_authenticated:
-        purchases = Purchase.get_all_by_uid_since(
-            current_user.id, datetime.datetime(1980, 9, 14, 0, 0, 0))
+            # order = Purchase.get_order(oid)
+            #     total = 0
+            # for prod in order:
+            #     total = total + (prod.price * prod.quantity)
+        #purchases = Purchase.get_all_by_uid_since(
+            #current_user.id, datetime.datetime(1980, 9, 14, 0, 0, 0))
+        ids = Purchase.get_time(current_user.id, datetime.datetime(1980, 9, 14, 0, 0, 0))
+        ids2 = []
+        print(ids[0][0])
+        for id in ids:
+            print(id)
+            if id[0] not in ids2:
+                ids2.append(id[0])
+        print(ids2)
+        purchases = Purchase.get_order_by_uid_since(ids2, current_user.id)
+        # pur_ordered = []
+        # for ord in purchases:
+        #     id_find = ids2
+        #     if purchase[0] == id_find
+        #     pur_ordered.append(purchase if purchase[0] == id_find)
         user_info = User.get(current_user.id)
+    print(purchases)
     #seller1 = 0
     #if Seller.get(current_user.id) != None:
         #seller1 = 1
@@ -183,7 +202,6 @@ def product(pid):
 
 @bp.route('/cart/<pid>/<sid>/<quant>')
 def cart(pid,sid, quant):
-    print("gets here?")
     if current_user.is_authenticated: #check here?
         inv = Product.get_inv(pid, sid)[0][0]
         if int(quant) <= inv and int(quant) > 0:
@@ -192,7 +210,7 @@ def cart(pid,sid, quant):
             print(pid)
             message = "Not enough of this product in stock for the quantity entered. Not added to cart"
             return render_template('quantity_error.html', pid1 = pid, error = message)
-        elif int(quant) < 0:
+        elif int(quant) <= 0:
             message = "Invalid quantity amount entered. Not added to cart"
             return render_template('quantity_error.html', pid1 = pid, error = message)
     return redirect(url_for('index.cartview'))
@@ -218,8 +236,8 @@ def remove(pid,sid):
 
 @bp.route('/seller/<sid>', methods=['GET', 'POST'])
 def seller_info(sid):
-    form = QuantityInput()
     seller1 = Product.get_seller_info(sid)
+    form = QuantityInput()
     if form.validate_on_submit():
         amnt = form.quantity.data
     else:

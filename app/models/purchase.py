@@ -35,6 +35,77 @@ ORDER BY time_purchased DESC
                               since=since)
         return [row for row in rows]
         #return [Purchase(*row) for row in rows]
+
+    @staticmethod
+    def get_order_by_uid_since(ids, buyer_id):
+        rows = []
+        for id1 in ids:
+            print(id1)
+            try:
+                row = app.db.execute("""
+SELECT pu.id, COUNT(pu.quantity) as c, SUM(pr.price) as total
+FROM Purchases as pu, Products as pr
+WHERE buyer_id = :buyer_id
+AND pu.id = :id
+AND pr.id = pu.product_id
+GROUP BY pu.id
+""",
+                              buyer_id = buyer_id,
+                              id = id1)
+            except:
+                print("error")
+            rows.append(row[0])
+        return rows
+
+    @staticmethod
+    def get_time(buyer_id, since):
+        rows = app.db.execute('''
+SELECT pu.id, pu.time_purchased
+FROM Purchases as pu
+WHERE buyer_id = :buyer_id
+AND time_purchased >= :since
+ORDER BY time_purchased DESC
+''',
+                              buyer_id=buyer_id,
+                              since=since)
+        return [row for row in rows]
+
+# pu.time_purchased, pu.fulfilled_status,
+        #return [Purchase(*row) for row in rows]
+
+
+
+
+#     @staticmethod
+#     def ids_ordered_time(buyer_id, since):
+#         rows = app.db.execute('''
+# SELECT pu.buyer_id, pu.time_purchased
+# FROM Purchases as pu, Products as pr
+# WHERE buyer_id = :buyer_id
+# AND pr.id = pu.product_id
+# AND time_purchased >= :since
+# ORDER BY time_purchased DESC
+# ''',
+#                               buyer_id=buyer_id,
+#                               since=since)
+#         return [row for row in rows]
+#         #return [Purchase(*row) for row in rows]
+
+
+    @staticmethod
+    def get_all_by_uid_since(buyer_id, since):
+        rows = app.db.execute('''
+SELECT pu.id, pu.product_id, pu.seller_ID_2, pu.buyer_id, pu.time_purchased, pu.quantity, pu.fulfilled_status, pr.name
+FROM Purchases as pu, Products as pr
+WHERE buyer_id = :buyer_id
+AND pr.id = pu.product_id
+AND time_purchased >= :since
+ORDER BY time_purchased DESC
+''',
+                              buyer_id=buyer_id,
+                              since=since)
+        return [row for row in rows]
+        #return [Purchase(*row) for row in rows]
     
     @staticmethod
     def add_purchases(id, u_id, their_purchases):
@@ -42,7 +113,7 @@ ORDER BY time_purchased DESC
             try:
                 rows = app.db.execute("""
 INSERT INTO Purchases(id, product_id, seller_ID_2, buyer_id, time_purchased, quantity, fulfilled_status)
-VALUES(:id, :pid, :sid, :user_id, current_timestamp, :quantity, 'TRUE')
+VALUES(:id, :pid, :sid, :user_id, current_timestamp, :quantity, 'FALSE')
 RETURNING id
 """,
                                 #oid = id, #what to do about order id?

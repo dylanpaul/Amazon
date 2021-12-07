@@ -4,6 +4,35 @@
 
 <br><br>
 
+<head>
+  <style>
+    #leftbox {
+        float:left; 
+    }
+    #rightbox {
+        float:right; 
+    }
+  </style>
+</head>
+
+<div id = rightbox>
+<form action="" method="post">
+  {{ form.hidden_tag() }}
+  <p>
+    <h3>Quantity</h3>
+    {{ form.quantity.label }}<br/>
+    {{ form.quantity(size=32) }}<br/>
+    {% for error in form.quantity.errors %}
+    <span style="color: red;">[{{ error }}]</span>
+    {% endfor %}
+  </p>
+  <p>{{ form.submit() }}</p>
+  <b>{{quantity}}</b>
+</form>
+
+</div>
+
+
 <h2>Seller {{seller[0].firstname + " " + seller[0].lastname}}:</h2>
 <table class='table table-hover table-bordered container'>
   <thead class="thead-dark">
@@ -11,7 +40,7 @@
       <th scope="col">Product Name</th>
       <th scope="col">Product Price</th>
       <th scope="col">Product Inventory</th>
-      <th scope="col">Quantity to Add:</th>
+      <th scope="col">Add Quantity to Cart</th>
       <th scope="col"></th>
     </tr>
   </thead>
@@ -21,18 +50,6 @@
         <th scope="row">{{s.name}}</th>
         <td>{{s.price}}</td>
         <td>{{s.inventory}}</td>
-        <td><form action="" method="post">
-          {{ form.hidden_tag() }}
-          <p>
-            {{ form.quantity.label }}<br/>
-            {{ form.quantity(size=32) }}<br/>
-            {% for error in form.quantity.errors %}
-            <span style="color: red;">[{{ error }}]</span>
-            {% endfor %}
-          </p>
-          <p>{{ form.submit() }}</p>
-          <b>{{quantity}}</b>
-        </form></td>
         <td><a class="btn btn-secondary" href="{{ url_for('index.cart', pid = s.id, sid = s.seller_id, quant = quantity)}}" role="button">Add to Cart</a></td>
       </tr>
     {% endfor %}
