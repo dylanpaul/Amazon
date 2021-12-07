@@ -85,6 +85,18 @@ ORDER BY time_purchased DESC
 ''',
                               seller_id=seller_id)
         return [row for row in rows]
+
+    @staticmethod
+    def get_seller_products(seller_id):
+        rows = app.db.execute('''
+SELECT p.id, p.product_id, p.seller_ID_2, p.buyer_id, p.time_purchased, p.quantity, p.fulfilled_status, pr.name
+FROM Purchases as p, Products as pr
+WHERE seller_ID_2 = :seller_id
+AND p.product_id = pr.id
+ORDER BY time_purchased DESC
+''',
+                              seller_id=seller_id)
+        return [row for row in rows]
         #return Purchase(*(rows[0])) if rows else None
 
 

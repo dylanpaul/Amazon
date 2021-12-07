@@ -35,7 +35,7 @@
 <div class = "box box-2">
   <form action="{{ url_for('index.price')}}" method="post">
       <select name= "price" class = "selectpicker form-control">
-          {% for price in prices%}
+          {% for price in ['Low to High', 'High to Low']%}
           <option value= "{{price}}" SELECTED>{{price}}</option>"
           {% endfor %}
       </select>
