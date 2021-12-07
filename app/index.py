@@ -32,11 +32,9 @@ def index():
      #   purchases = None
     # render the page by adding information to the index.html file
     cats = Product.get_categories(True)
-    p = ['Low to High', 'High to Low']
     return render_template('index.html',
                            avail_products=products,
-                           categories = cats,
-                           prices = p)
+                           categories = cats)
                            #purchase_history=purchases)
 
 @bp.route('/category', methods=['GET', 'POST'])
@@ -47,27 +45,25 @@ def category():
     categs = select
     #print(categs)
     cats = Product.get_categories()
-    p = ['Low to High', 'High to Low']
     #products = Product.get_all(True)
     return render_template('index.html',
                            avail_products=products,
-                           categories = cats,
-                           prices = p)
+                           categories = cats)
     return(str(select))
 
 
 @bp.route('/price', methods=['GET', 'POST'])
 def price():
     select = request.form.get('price')
-    #print(categs)
-    products = Product.get_cat_price()
+    if select == 'Low to High':
+        products = Product.get_price_low()
+    else:
+        products = Product.get_price_high()
     cats = Product.get_categories()
-    p = ["Low to High", "High to Low"]
     #products = Product.get_all(True)
     return render_template('index.html',
                            avail_products=products,
-                           categories = cats,
-                           prices = p)
+                           categories = cats)
     return(str(select))
 
 
@@ -141,11 +137,11 @@ def customer():
 def seller_page(uid):
     #print(sid)
     if current_user.is_authenticated:
-        purchases = Purchase.get_all_by_uid_since(
-            current_user.id, datetime.datetime(1980, 9, 14, 0, 0, 0))
+        # purchases = Purchase.get_all_by_uid_since(
+        #     current_user.id, datetime.datetime(1980, 9, 14, 0, 0, 0))
         user_info = User.get(current_user.id)
-    purchases1 = Purchase.get_seller(current_user.id)
-    #print(purchases1)
+    purchases1 = Purchase.get_seller_products(current_user.id)
+    print(purchases1)
     #print(purchases1.buyer_id)
     users = Purchase.get_users(current_user.id)
     seller1 = Product.get_seller_info(current_user.id)
@@ -187,22 +183,27 @@ def product(pid):
 
 @bp.route('/cart/<pid>/<sid>/<quant>')
 def cart(pid,sid, quant):
-    if current_user.is_authenticated:
+    print("gets here?")
+    if current_user.is_authenticated: #check here?
         inv = Product.get_inv(pid, sid)[0][0]
         if int(quant) <= inv and int(quant) > 0:
             Cart.add(int(pid),int(sid),current_user.id, int(quant))
         elif int(quant) > inv:
+            print(pid)
             message = "Not enough of this product in stock for the quantity entered. Not added to cart"
-            return render_template('quantity_error.html', error = message)
+            return render_template('quantity_error.html', pid1 = pid, error = message)
         elif int(quant) < 0:
             message = "Invalid quantity amount entered. Not added to cart"
-            return render_template('quantity_error.html', error = message)
+            return render_template('quantity_error.html', pid1 = pid, error = message)
     return redirect(url_for('index.cartview'))
 
 @bp.route('/cartview')
 def cartview():
     if current_user.is_authenticated:
         cart = Cart.get_cart_uid(current_user.id)
+    else:
+        message = "You have to register as a user to add to your cart"
+        return render_template('quality_error2.html', error = message)
     return render_template('cart.html',
                            cart_things = cart,
                            total_price = Cart.get_total_price(current_user.id),
@@ -241,12 +242,13 @@ class AddForm(FlaskForm):
 @bp.route('/add_product/<sid>', methods=['GET', 'POST'])
 def add_product(sid):
     form = AddForm()
-    id1 = Product.get_count() + 1
+    id1 = Product.get_count() + 2
+    print(id1)
     if form.validate_on_submit():
         Product.add_product(id1, form.name.data, sid, form.description.data, form.category.data, 
         form.inventory.data, True, form.price.data)
         print(Product)
-        return redirect(url_for('index.customer'))
+        return redirect(url_for('index.seller_page', uid = sid))
     return render_template('add_product.html', title = 'Add Product', form = form)
                            #eller = sell)
 
@@ -264,7 +266,7 @@ def test(sid):
     select = request.form.get('product')
     #print(select)
     Product.delete(sid, select)
-    return redirect(url_for('index.customer'))
+    return redirect(url_for('index.seller_page', uid = sid))
 
 
 class InvForm(FlaskForm):
@@ -350,7 +352,7 @@ def checkout():
             Purchase.decrement_stock(their_purchase)
             Purchase.update_user_balance(current_user.id, their_balance, save)
             Purchase.update_seller_balances(their_purchase)
-            Purchase.make_unavailable()
+            Purchase.make_unavailable() #shouldnt this only be if all the quantity is bad?
             Cart.clear(current_user.id)
         elif quantities_good == False:
             message = "The inventory of one or more products was updated to be smaller than its quantity in your cart. Please update this quantity."
@@ -358,8 +360,12 @@ def checkout():
         elif balance_good == False:
             message = "You don't have enough money to buy that. Have you considered getting a job?"
             return render_template('balance_error.html', error = message, user_id = current_user.id)
-
-    return render_template('checkout.html', total = save, old_balance = their_balance, new_balance = User.get_balance(current_user.id)[0][0])
+    print(their_purchase)
+    return render_template('checkout.html', 
+                            total = save, 
+                            old_balance = their_balance, 
+                            new_balance = User.get_balance(current_user.id)[0][0],
+                            purchases = their_purchase)
 
 # class AvailForm(FlaskForm):
 #     available = StringField(_l('available'), validators=[DataRequired()])

@@ -36,18 +36,26 @@
   <thead class="thead-dark">
     <tr>
       <th scope="col">Purchase ID</th>
-      <th scope="col">Fufillment Status</th>
       <th scope="col">Date</th>
+      <th scope="col">Number of Items</th>
+      <th scope="col">Product</th>
       <th scope="col">Address</th>
+      <th scope="col">Fufillment Status</th>
     </tr>
   </thead>
   <tbody>
     {% for i in range(purchases|length)%}
       <tr>
         <th scope="row">{{purchases[i].id}}</th>
-        <td>{{purchases[i].fulfilled_status}} </td>
         <td>{{purchases[i].time_purchased}}</td>
-        <td>{{purchases[i].fulfilled_status}} <a href="{{ url_for('index.edit_fulfilled', pid = purchases[i].id, status = purchases[i].fulfilled_status, uid = user1.id)}}" type="button" class="btn btn-light">Mark as Fulfilled</a></td> 
+        <td>{{purchases[i].quantity}}</td>
+        <td>{{purchases[i].name}}</td>
+        <td>{{user_info[i][0][2]}}</td>
+        {% if purchases[i].fulfilled_status == False %}
+          <td>{{purchases[i].fulfilled_status}} <a href="{{ url_for('index.edit_fulfilled', pid = purchases[i].id, status = purchases[i].fulfilled_status, uid = user1.id)}}" type="button" class="btn btn-light">Mark as Fulfilled</a></td> 
+        {% else %}
+          <td>{{purchases[i].fulfilled_status}} 
+        {% endif %} 
       </tr>
     {% endfor %}
   </tbody>

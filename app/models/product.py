@@ -171,12 +171,23 @@ AND available = :av
         return [Product(*row) for row in rows]
 
     @staticmethod
-    def get_cat_price():
+    def get_price_low():
         rows = app.db.execute('''
 SELECT id, name, seller_id, description, category, inventory, available, price
 FROM Products
 WHERE available = :av
 ORDER BY price
+''',
+                              av = True)
+        return [Product(*row) for row in rows]
+
+    @staticmethod
+    def get_price_high():
+        rows = app.db.execute('''
+SELECT id, name, seller_id, description, category, inventory, available, price
+FROM Products
+WHERE available = :av
+ORDER BY price DESC
 ''',
                               av = True)
         return [Product(*row) for row in rows]
@@ -227,14 +238,16 @@ AND p.seller_id = u.id
 
     @staticmethod
     def search(search):
-        search = search + "%"
-        print(search)
+        search1 = search + "%"
+        search2 = "%" + search + "%"
         rows = app.db.execute('''
 SELECT id, name, seller_id, description, category, inventory, available, price
 FROM Products
-WHERE name LIKE :search
+WHERE name LIKE :search1
+OR name LIKE :search2
 ''',
-                                search = search)
+                                search1 = search1,
+                                search2 = search2)
         return [Product(*row) for row in rows]
 
 

@@ -14,6 +14,16 @@
         <th scope="col">Quantity</th>
         <th scope="col"></th>
       </tr>
+      <tbody>
+        {% for purchase in purchases%}
+          <tr>
+            <th scope="row">{{purchase.name}}</th>
+            <td>{{purchase.seller_id}}</td>
+            <td>{{purchase.price}}</td>
+            <td>{{purchase.quantity}}</td>
+          </tr>
+        {% endfor %}
+      </tbody>
     </thead>
     <br><br>
     <b>Old Balance: {{old_balance}}</b>
