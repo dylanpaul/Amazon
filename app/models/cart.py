@@ -28,15 +28,16 @@ AND c.seller_id = u.id
         #return Product(*(rows[0])) if rows is not None else None
 
     @staticmethod
-    def add(pid, sid, user_id):
+    def add(pid, sid, user_id, quant):
         try:
             app.db.execute("""
 INSERT INTO Cart_Items(user_id, product_id, seller_id, quantity)
-VALUES(:user_id, :pid, :sid, 1)
+VALUES(:user_id, :pid, :sid, :quantity)
 """,
                                 user_id = user_id,
                                 pid = pid,
                                 sid = sid,
+                                quantity = quant
                                 )
         except:
             print("error")
