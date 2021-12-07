@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<br><br>
+
+
+<h2>Order Details</h2>
+<b>Purchase ID: {{oid}}</b>
+<table class='table table-hover table-bordered container'>
+    <thead class="thead-dark">
+      <tr>
+        <th scope="col">Product Name</th>
+        <th scope="col">Product ID</th>
+        <th scope="col">Seller</th>
+        <th scope="col">Price</th>
+        <th scope="col">Quantity</th>
+        <th scope="col">Time Purhcased</th>
+        <th scope="col">Fulfilled Status</th>
+      </tr>
+    </thead>
+    <tbody>
+        {% for prod in order%}
+        <tr>
+          <td>{{prod.name}}</td>
+          <td>{{prod.product_id}}</td>
+          <td><a href = "{{ url_for('index.seller_info', sid = prod.id) }}">{{prod.firstname + " " + prod.lastname}}</a></td>
+          <td>{{prod.price}}</td>
+          <td>{{prod.quantity}}</td>
+          <td>{{prod.time_purchased}}</td>
+          <td>{{prod.fulfilled_status}}</td>
+        {% endfor %}
+    </tbody>
+  </table>
+  <b>Total Cost: {{total}}</b>
+{% endblock %}

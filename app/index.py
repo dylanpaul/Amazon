@@ -369,6 +369,27 @@ def checkout():
                             new_balance = User.get_balance(current_user.id)[0][0],
                             purchases = their_purchase)
 
+@bp.route('/order/<oid>')
+def order_page(oid):
+    order = Purchase.get_order(oid)
+    total = 0
+    for prod in order:
+        total = total + (prod.price * prod.quantity)
+    
+    return render_template('order.html',
+                            oid = oid,
+                            order = order,
+                            total = total
+    )
+
+
+
+
+
+
+
+
+
 # class AvailForm(FlaskForm):
 #     available = StringField(_l('available'), validators=[DataRequired()])
 #     submit = SubmitField(_l('Update'))
