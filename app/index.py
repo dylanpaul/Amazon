@@ -162,22 +162,41 @@ def seller_page(uid):
                             user_info = u)
 
 
-@bp.route('/product/<pid>')
+
+class QuantityInput(FlaskForm):
+    quantity = IntegerField(_l(''), validators=[DataRequired()])
+    submit = SubmitField(_l('Set Quantity'))
+
+@bp.route('/product/<pid>', methods=['GET', 'POST'])
 def product(pid):
-   # get the name of the clicked product
+   form = QuantityInput()
+   #get product name:
    prod_name = Product.get_name(pid)
-   #seller_name = User.get(product1.seller_id)
    #get all products with that name:
    prods = Product.get_shared(prod_name)
-   # render the page by adding information to the index.html file
+   # render the page
+   if form.validate_on_submit():
+        amnt = form.quantity.data
+   else:
+       amnt = 1
    return render_template('product.html',
-                          prod = prods)
+                          prod = prods,
+                          form = form,
+                          quantity = amnt)
 
-@bp.route('/cart/<pid>/<sid>')
-def cart(pid,sid):
-    #get cart for one user
+
+@bp.route('/cart/<pid>/<sid>/<quant>')
+def cart(pid,sid, quant):
     if current_user.is_authenticated:
-        Cart.add(int(pid),int(sid),current_user.id)
+        inv = Product.get_inv(pid, sid)[0][0]
+        if int(quant) <= inv and int(quant) > 0:
+            Cart.add(int(pid),int(sid),current_user.id, int(quant))
+        elif int(quant) > inv:
+            message = "Not enough of this product in stock for the quantity entered. Not added to cart"
+            return render_template('quantity_error.html', error = message)
+        elif int(quant) < 0:
+            message = "Invalid quantity amount entered. Not added to cart"
+            return render_template('quantity_error.html', error = message)
     return redirect(url_for('index.cartview'))
 
 @bp.route('/cartview')
@@ -196,11 +215,18 @@ def remove(pid,sid):
     return redirect(url_for('index.cartview'))
 
 
-@bp.route('/seller/<sid>')
+@bp.route('/seller/<sid>', methods=['GET', 'POST'])
 def seller_info(sid):
+    form = QuantityInput()
     seller1 = Product.get_seller_info(sid)
+    if form.validate_on_submit():
+        amnt = form.quantity.data
+    else:
+       amnt = 1
     return render_template('seller.html',
-                           seller = seller1)
+                           seller = seller1,
+                           form = form,
+                           quantity = amnt)
 
 
 class AddForm(FlaskForm):
