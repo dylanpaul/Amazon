@@ -276,7 +276,7 @@ def add_product(sid):
 def delete_product(sid):
     products = Product.get_seller_info(sid)
     if len(products) == 0:
-        message = "Bruh. You can't delete what you don't have. Try again."
+        message = "You can't delete what you don't have. Try again."
         return render_template('delete_error.html', error = message)
     return render_template('delete_product.html', products = products)
 
@@ -378,7 +378,7 @@ def checkout():
             message = "The inventory of one or more products was updated to be smaller than its quantity in your cart. Please update this quantity."
             return render_template('quantity_error.html', error = message)
         elif balance_good == False:
-            message = "You don't have enough money to buy that. Have you considered getting a job?"
+            message = "You don't have enough money to buy that"
             return render_template('balance_error.html', error = message, user_id = current_user.id)
     print(their_purchase)
     return render_template('checkout.html', 
