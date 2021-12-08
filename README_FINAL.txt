@@ -1,4 +1,7 @@
-VIDEO: our video is uploaded as a mp3 file
+VIDEO: our video is uploaded as a mp4 file on gradescope
+
+Our weekly updates:
+https://docs.google.com/spreadsheets/d/1uZxblmr_UlDb82sOIQejrrhNZPvMJr7YtWGlQoTP2g8/edit?usp=sharing
 
 Isabella (icg2)- I worked primarily on the account information and seller view pages of our Website. 
 The account information page shows the information about a certain user. It gives them the ability to 

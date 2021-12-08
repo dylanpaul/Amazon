@@ -253,24 +253,3 @@ OR name LIKE :search2
         return [Product(*row) for row in rows]
 
 
-#   @staticmethod
-#WHERE category = :category
-#  def get_unique(available=True):
-        #rows = app.db.execute('''
-#SELECT DISTINCT id, name, category
-#FROM Products
-#WHERE available = :available
-#''',
- #                             available=available)
-  #      return [Product(*row) for row in rows]
-    
-   # @staticmethod
-  #  def get_price_range(available=True):
-   #     rows = app.db.execute('''
-#SELECT DISTINCT id, MIN(price) as min, MAX(price) as max
-#FROM Products
-#WHERE available = :available
-#GROUP BY id
-#''',
- #                             available=available)
- #       return [Product(*row) for row in rows]
